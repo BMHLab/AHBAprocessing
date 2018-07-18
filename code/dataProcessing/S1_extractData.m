@@ -232,7 +232,7 @@ elseif strcmp(updateProbes, 'reannotator')
     hg38match(indREM,:) = []; 
     
     fprintf(1,'Removing probes not mapped to genes\n')
-    fprintf(1,'Removing %d irrelevant probes\n', length(indREM))
+    fprintf(1,'Removing %d irrelevant probes\n', length(nnu))
     
 
     % find probes that are in both lists and replace geneSymbol and entrezIDs
