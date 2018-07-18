@@ -16,7 +16,7 @@ options.ExcludeCBandBS = true;
 options.useCUSTprobes = true; 
 options.updateProbes = 'reannotator'; 
 options.probeSelections = {'RNAseq'};
-options.parcellations = {'cust250'};
+options.parcellations = {'HCP'};
 options.distanceThreshold = 2;
 options.signalThreshold = 0.5; 
 options.RNAseqThreshold = 0.2; 
@@ -34,6 +34,7 @@ options.saveOutput = true;
 options.normaliseWithinSample = true; 
 options.xrange = [20 200]; 
 options.plotCGE = false; 
+options.plotResiduals = false; 
 
 
 S1_extractData(options)

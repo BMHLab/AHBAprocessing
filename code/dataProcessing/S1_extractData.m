@@ -69,7 +69,7 @@ for subj=1:6
     FileNoise = 'PACall.csv';
     Expression = csvread(FileMicroarray);
     noise = csvread(FileNoise);
-    
+
     Expression(:,1) = [];                         % exclude probe IDs from expression matrix
     [~,~,SlabType] = xlsread(FileAnnot, 'D:D');
     [~,~, StructureName] = xlsread(FileAnnot, 'F:F');
@@ -81,27 +81,27 @@ for subj=1:6
     WellID = xlsread(FileAnnot, 'C:C');
     [~,probeList] = intersect(noise(:,1),ProbeID, 'stable');
     noise = noise(probeList,2:end);
-    
+
     % To exclude expression data and coordinates for braintem (BS) and cerebellum (CB)
     % exclude columns in expression and rows in coordinates if slabtype is CB or BS
     if ExcludeCBandBS
         fprintf('Excluding brainstem and cerebellum data\n')
-        
+
         BS = strfind(SlabType, 'BS'); BSind = find(~cellfun(@isempty,BS));
         CB = strfind(SlabType, 'CB'); CBind = find(~cellfun(@isempty,CB));
         BSandCBind = [BSind;CBind];
-        
+
         fprintf(1,'%d cerebellum and brainstem samples to remove\n', length(BSandCBind))
-        
+
         Expression(:,BSandCBind) = NaN;
         MMcoordinates(BSandCBind,:) = NaN;
         MRIvoxCoordinates(BSandCBind,:) = NaN;
         SampleID(BSandCBind,:) = NaN;
-        WellID(BSandCBind,:) = NaN; 
+        WellID(BSandCBind,:) = NaN;
         noise(:,BSandCBind) = NaN;
         StructureName(BSandCBind) = {NaN};
     end
-    
+
     % for nan columns
     % keep only existing expression values
     Expression = Expression(:,all(~isnan(Expression)));
@@ -113,17 +113,17 @@ for subj=1:6
     noise = noise(:,all(~isnan(noise)));
     % keep only existing structure names
     StructureName(cellfun(@(StructureName) any(isnan(StructureName)),StructureName)) = [];
-    
+
     % assign output to Data cell;
     Data{subj,1} = Expression;
     Data{subj,2} = MMcoordinates;
     Data{subj,3} = StructureName;
     Data{subj,4} = MRIvoxCoordinates;
     Data{subj,5} = noise;
-    Data{subj,6} = SampleID; 
-    Data{subj,7} = WellID; 
+    Data{subj,6} = SampleID;
+    Data{subj,7} = WellID;
     cd ..
-    
+
 end
 
 % %------------------------------------------------------------------------------
@@ -142,7 +142,7 @@ if ~useCUSTprobes
     fprintf(1,'%d CUST probes removed\n', length(remInd))
     ProbeName(remInd) = {NaN};
     ProbeID(remInd) = NaN;
-    
+
 ProbeName(isnan(ProbeID)) = [];
 EntrezID(isnan(ProbeID)) = [];
 GeneID(isnan(ProbeID)) = [];
@@ -150,12 +150,12 @@ GeneSymbol(isnan(ProbeID)) = [];
 GeneName(isnan(ProbeID)) = [];
 
     for s=1:6
-       DataTable.Expression{s,1}(isnan(ProbeID),:) = []; 
+       DataTable.Expression{s,1}(isnan(ProbeID),:) = [];
        DataTable.Noise{s,1}(isnan(ProbeID),:) = [];
     end
 
 ProbeID(isnan(ProbeID)) = [];
-    
+
 end
 
 if strcmp(updateProbes, 'Biomart')
@@ -164,11 +164,11 @@ if strcmp(updateProbes, 'Biomart')
     %------------------------------------------------------------------------------
     % load re-annotated probes
     updatedProbes = importProbes('mart_export_updatedProbes.txt');
-    
+
     % find probes that are mentioned more than once
     [~, i, j] = unique(updatedProbes.probeNames,'first');
     indexToDupes = find(not(ismember(1:numel(updatedProbes.probeNames),i)));
-    
+
     % exclude those probes
     updatedProbes(indexToDupes,:) = [];
     % now each probe is mapped to one gene
@@ -177,9 +177,9 @@ if strcmp(updateProbes, 'Biomart')
     allenProbes.probeNames = ProbeName;
     allenProbes.geneName = GeneSymbol;
     allenProbes.NCBIgeneID = EntrezID;
-    
+
     updatedMatching = comparehg38VSAllen(updatedProbes, allenProbes);
-    
+
     % sumarise the information in numbers
     nm = length(find(updatedMatching.compare==1));
     fprintf(1,'%d probes are matching\n', nm)
@@ -189,33 +189,33 @@ if strcmp(updateProbes, 'Biomart')
     fprintf(1,'%d probes are introduced with IDs\n', nu)
     nnu = length(find(updatedMatching.compare==3));
     fprintf(1,'%d probes are not givenID in NCBI\n', nnu)
-    
-    
+
+
     % find probes that are in both lists and replace geneSymbol and entrezIDs
     % with updated.
     [probesSelect, INDold, INDnew] = intersect(ProbeName, updatedMatching.probeNames);
-    
+
     ProbeName = ProbeName(INDold);
     ProbeID = ProbeID(INDold);
     EntrezID = updatedMatching.NCBIgeneID(INDnew);
     GeneSymbol = updatedMatching.geneName(INDnew);
-    
-    
+
+
     for s=1:6
         DataTable.Expression{s,1} = DataTable.Expression{s,1}(INDold,:);
         DataTable.Noise{s,1} = DataTable.Noise{s,1}(INDold,:);
     end
-    
+
 elseif strcmp(updateProbes, 'reannotator')
-    load('reannotatedProbes.mat'); 
+    load('reannotatedProbes.mat');
     % if cust probes are to be excluded, test only Agilent to get the
     % numbers.
    if ~useCUSTprobes
-       
+
        cust = strfind(hg38match.probeNames, 'CUST');
        remInd = find(~cellfun(@isempty,cust));
        hg38match(remInd,:) = [];
-       
+
    end
 
     % sumarise the information in numbers
@@ -227,31 +227,31 @@ elseif strcmp(updateProbes, 'reannotator')
     fprintf(1,'%d probes are introduced with IDs\n', nu)
     nnu = length(find(hg38match.compare==3));
     fprintf(1,'%d are not givenID in NCBI- remove\n', nnu)
-    
-    indREM = hg38match.compare==3; 
-    hg38match(indREM,:) = []; 
-    
+
+    indREM = hg38match.compare==3;
+    hg38match(indREM,:) = [];
+
     fprintf(1,'Removing probes not mapped to genes\n')
-    fprintf(1,'Removing %d irrelevant probes\n', length(nnu))
-    
+    fprintf(1,'Removing %d irrelevant probes\n', nnu)
+
 
     % find probes that are in both lists and replace geneSymbol and entrezIDs
     % with updated.
     [probesSelect, INDold, INDnew] = intersect(ProbeName, hg38match.probeNames);
-    
+
     ProbeName = ProbeName(INDold);
     ProbeID = ProbeID(INDold);
     EntrezID = hg38match.ID(INDnew);
     GeneSymbol = hg38match.geneNames(INDnew);
 
-    
-    
+
+
     for s=1:6
         DataTable.Expression{s,1} = DataTable.Expression{s,1}(INDold,:);
         DataTable.Noise{s,1} = DataTable.Noise{s,1}(INDold,:);
     end
-  
-    
+
+
 end
     % if chosen not to update probes, then remove ones with missing entrezIDs
     %------------------------------------------------------------------------------
@@ -262,7 +262,7 @@ end
         DataTable.Expression{s,1}(isnan(EntrezID),:) = [];
         DataTable.Noise{s,1}(isnan(EntrezID),:) = [];
     end
-    
+
     ProbeName(isnan(EntrezID)) = [];
     GeneSymbol(isnan(EntrezID)) = [];
     ProbeID(isnan(EntrezID)) = [];
@@ -299,7 +299,7 @@ fprintf(1,'Saving data to the file\n')
 if strcmp(updateProbes, 'reannotator') || strcmp(updateProbes, 'Biomart')
 save(sprintf('%sProbesUpdatedXXX.mat', startFileName), 'DataTable','DataTableProbe', 'Expressionall', 'Coordinatesall', 'StructureNamesall', 'MRIvoxCoordinatesAll', 'noiseall', 'options');
 else
-save(sprintf('%sXXX.mat', startFileName), 'DataTable','DataTableProbe', 'Expressionall', 'Coordinatesall', 'StructureNamesall', 'MRIvoxCoordinatesAll', 'noiseall', 'options');   
+save(sprintf('%sXXX.mat', startFileName), 'DataTable','DataTableProbe', 'Expressionall', 'Coordinatesall', 'StructureNamesall', 'MRIvoxCoordinatesAll', 'noiseall', 'options');
 end
 cd ../../..
 end
