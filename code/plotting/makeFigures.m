@@ -281,11 +281,11 @@ options.percentDS =  10;
 options.xrange = [0 160];
 fprintf('Making figure S7C \n')
 S4_normalisation(options);
-pause(5)
+
 
 % D) 100% DS genes, high resolution parcellation
 options.percentDS =  100;
 options.xrange = [0 160];
 fprintf('Making figure S7D \n')
 S4_normalisation(options);
-pause(5)
+
