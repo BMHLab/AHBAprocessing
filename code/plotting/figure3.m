@@ -42,7 +42,7 @@ nrProbes(j) = length(ProbeName);
 nrGenes(j) = length(unique(EntrezID)); 
 end
 
-figure;
+fig=figure;
 %set(fig,'Position', [100, 100, 1500, 400]);
 set(fig,'defaultAxesColorOrder',[.92 .35 .24; 0 .5 .5]);
 %subplot(1,3,1);
