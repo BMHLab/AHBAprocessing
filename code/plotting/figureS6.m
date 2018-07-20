@@ -7,8 +7,6 @@ elseif strcmp(howTOnormalise, 'together')
     load('100DS82scaledRobustSigmoidNGRNAseqQC1LcortexSubcortex_ROI_NOdistCorrSurfaceANDEuclidean.mat')
 end
 
-figure; set(gcf,'Position', [100, 100, 1500, 400]);
-set(gcf,'color','w');
 
 numNodes = 41;
 numCort = 34;
