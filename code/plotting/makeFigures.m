@@ -56,7 +56,7 @@ options.probeSelections = {'RNAseq'};
 options.signalThreshold = 0.5; % this indicated no intensity based filtering
 options.RNAseqThreshold = 0.2; % this indicated no exclusion of data based on correlation to RNA-seq
 options.RNAsignThreshold = false; 
-fprintf('Generating initial data for figure 56\n')
+fprintf('Generating initial data for figure 6\n')
 S2_probes(options);
 
 options.parcellations = {'aparcaseg'};
@@ -68,7 +68,7 @@ numROIs = 34;
 % 34 - for left cortex only
 % 41 - for left cortex + subcortex
 fprintf('Making figure 6A\n')
-figure; set(gcf,'Position',[300 300 1500 1500])
+figure; set(gcf,'Position',[300 300 1000 1000])
 subplot(2,2,1); figure6ABCD(doNormalise,numROIs)
 % % ------------------------------------------------------------------------------
 % Figure 6B
@@ -153,7 +153,7 @@ numROIs = 41;
 % 34 - for left cortex only
 % 41 - for left cortex + subcortex
 fprintf('Making figure S3\n')
-figure; set(gcf,'Position',[300 300 1000 500])
+figure; set(gcf,'Position',[300 300 1400 500])
 subplot(1,2,1); 
 figure6ABCD(doNormalise,numROIs)
 
@@ -263,13 +263,13 @@ options.plotResiduals = false;
 % A) 10% DS genes, low resolution parcellation
 fprintf('Making figure S7A \n')
 S4_normalisation(options);
-pause(5)
+title({sprintf('%d%% DS genes', options.percentDS); 'low wesolution parcellation'}); 
 
 % B) 100% DS genes, low resolution parcellation
 options.percentDS =  100;
 fprintf('Making figure S7B \n')
 S4_normalisation(options);
-pause(5)
+title({sprintf('%d%% DS genes', options.percentDS); 'low wesolution parcellation'}); 
 
 % C) 10% DS genes, high resolution parcellation
 options.parcellations = {'HCP'};
@@ -281,6 +281,7 @@ options.percentDS =  10;
 options.xrange = [0 160];
 fprintf('Making figure S7C \n')
 S4_normalisation(options);
+title({sprintf('%d%% DS genes', options.percentDS); 'high wesolution parcellation'}); 
 
 
 % D) 100% DS genes, high resolution parcellation
@@ -288,4 +289,5 @@ options.percentDS =  100;
 options.xrange = [0 160];
 fprintf('Making figure S7D \n')
 S4_normalisation(options);
+title({sprintf('%d%% DS genes', options.percentDS); 'high wesolution parcellation'}); 
 

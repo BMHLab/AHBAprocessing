@@ -42,10 +42,11 @@ nrProbes(j) = length(ProbeName);
 nrGenes(j) = length(unique(EntrezID)); 
 end
 
-fig=figure;
-set(fig,'Position', [100, 100, 1500, 400]);
+figure;
+%set(fig,'Position', [100, 100, 1500, 400]);
 set(fig,'defaultAxesColorOrder',[.92 .35 .24; 0 .5 .5]);
-subplot(1,3,1);
+%subplot(1,3,1);
+
 
 yyaxis left
 plot(signalThresholds, nrGenes, '-o', ...
@@ -83,6 +84,7 @@ colors = [.96 .63 .55; 1 .46 .22];
 corMult = cell(length(signalThreshold),1);
 numProbes = 1;
 isMore = true;
+figure; 
 for i=1:length(signalThreshold)
     
     signalLevel = sum(noiseall,2)./size(noiseall,2);
@@ -137,7 +139,7 @@ for i=1:length(signalThreshold)
     
     perc = length(find(corMult{i}<0.3))/length(corMult{i});
     
-    subplot(1,3,2); histogram(corMult{i}, 50,'EdgeColor',[.6 .6 .6],...
+    histogram(corMult{i}, 50,'EdgeColor',[.6 .6 .6],...
         'FaceColor',colors(i,:));
     
     set(gcf,'color','w'); hold on;
@@ -230,7 +232,7 @@ C(indRem,:) = [];
 mafter = mean(C(:,1));
 mbefore = mean(C(:,2));
 
-subplot(1,3,3);
+figure;  
 histogram(C(:,2), 25,'EdgeColor',[.6 .6 .6],...
     'FaceColor',[.96 .63 .55]);
 xlabel('Average correlation between probes')

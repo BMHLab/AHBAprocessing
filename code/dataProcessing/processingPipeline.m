@@ -32,7 +32,7 @@ options.doNormalise = true;
 options.resolution = 'ROI'; 
 options.saveOutput = true; 
 options.normaliseWithinSample = true; 
-options.xrange = [20 200]; 
+options.xrange = [0 200]; 
 options.plotCGE = false; 
 options.plotResiduals = false; 
 

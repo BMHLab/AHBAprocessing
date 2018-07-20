@@ -73,9 +73,10 @@ for subj=1:6
     Expression(:,1) = [];                         % exclude probe IDs from expression matrix
     [~,~,SlabType] = xlsread(FileAnnot, 'D:D');
     SlabType(any(cellfun(@(x) any(isnan(x)), SlabType),2),:) = [];
-    [~,~,StructureName] = xlsread(FileAnnot, 'F:F');
+
+    [~,~, StructureName] = xlsread(FileAnnot, 'F:F');
     StructureName(any(cellfun(@(x) any(isnan(x)), StructureName),2),:) = [];
-    
+
     SlabType(1) = [];                           % remove headline
     StructureName(1) = [];                      % remove headline
     MMcoordinates = xlsread(FileAnnot, 'K:M');

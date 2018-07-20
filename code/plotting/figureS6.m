@@ -96,32 +96,19 @@ expCorr(indSS) = corrected{2};
 expCorr(indCS) = corrected{3};
 expCorr = expCorr'+expCorr;
 
-subplot(1,3,1); 
+figure;  
 imagesc(averageCoexpression); caxis([-1,1]);title('Coexpression');
+set(gcf,'color','w');
 colormap([flipud(BF_getcmap('blues',9));[1 1 1];BF_getcmap('reds',9)]);
+title(sprintf('CGE, normalised %s', howTOnormalise)); 
 
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'ytick',[])
 set(gca,'yticklabel',[])
 
-% plot distance relationships separately for groups on corrected data
-subplot(1,3,3); scatter(distSEP{1}, corrected{1}, 100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[.64 .87 .93]);
-hold on; scatter(distSEP{3}, corrected{3},100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[1 .65 0]);
-hold on; scatter(distSEP{2}, corrected{2},100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[1 .11 .18]);
-set(gcf,'color','w');set(gca,'fontsize',18)
-%legend({'Cortex to cortex', 'Cortex to subcortex', 'Subcortex to subcortex'},'FontSize', 18);
-xlabel('Distance between regions (mm)')
-ylabel('Correlated gene expression');
-ylim([-1 1])
-xticks([20 40 60 80 100 120 140 160 180 200])
-xlim([10 210])
-
 % plot distance relationships separately for groups on non-corrected data
-subplot(1,3,2); scatter(distSEP{1},expSEP{1}, 100, 'MarkerEdgeColor',[.55 .55 .55],...
+figure; scatter(distSEP{1},expSEP{1}, 100, 'MarkerEdgeColor',[.55 .55 .55],...
     'MarkerFaceColor',[.64 .87 .93]);
 hold on; scatter(distSEP{3}, expSEP{3},100, 'MarkerEdgeColor',[.55 .55 .55],...
     'MarkerFaceColor',[1 .65 0]);
@@ -134,6 +121,24 @@ ylabel('Correlated gene expression');
 ylim([-1 1])
 xticks([20 40 60 80 100 120 140 160 180 200])
 xlim([10 210])
+title(sprintf('CGE - distance, normalised %s', howTOnormalise)); 
+
+% plot distance relationships separately for groups on corrected data
+figure; scatter(distSEP{1}, corrected{1}, 100, 'MarkerEdgeColor',[.55 .55 .55],...
+    'MarkerFaceColor',[.64 .87 .93]);
+hold on; scatter(distSEP{3}, corrected{3},100, 'MarkerEdgeColor',[.55 .55 .55],...
+    'MarkerFaceColor',[1 .65 0]);
+hold on; scatter(distSEP{2}, corrected{2},100, 'MarkerEdgeColor',[.55 .55 .55],...
+    'MarkerFaceColor',[1 .11 .18]);
+set(gcf,'color','w');set(gca,'fontsize',18)
+%legend({'Cortex to cortex', 'Cortex to subcortex', 'Subcortex to subcortex'},'FontSize', 18);
+xlabel('Distance between regions (mm)')
+ylabel('Correlated gene expression');
+ylim([-1 1])
+xticks([20 40 60 80 100 120 140 160 180 200])
+xlim([10 210])
+title(sprintf('CGE - distance, normalised %s', howTOnormalise)); 
+
 cd ../../..
 end
 
