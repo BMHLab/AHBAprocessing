@@ -15,7 +15,7 @@ Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu
 In order to reproduce data used in the analyses please download the contents of this repository.
 
 ### Data files
-Data files required for this project are hosted on [this figshare repository](https://figshare.com/s/0bc61dec0c5e404c4de7). 
+Data files required for this project are hosted on [this figshare repository](https://figshare.com/s/441295fe494375aa0c13). 
 Please create a directory called data in the root directory and download data there.
 
 ### Data processing
