@@ -33,8 +33,9 @@ options.resolution = 'ROI';
 options.saveOutput = true; 
 options.normaliseWithinSample = true; 
 options.xrange = [0 200]; 
-options.plotCGE = false; 
-options.plotResiduals = false; 
+options.plotCGE = true; 
+options.plotResiduals = true; 
+options.meanSamples = 'meanSamples'; %'meanSamples'; meanSubjects
 
 
 S1_extractData(options)

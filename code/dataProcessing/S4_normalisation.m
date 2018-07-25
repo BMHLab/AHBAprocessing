@@ -21,6 +21,7 @@ signalThreshold = options.signalThreshold;
 xrange = options.xrange; 
 doPlotCGE = options.plotCGE; 
 doPlotResiduals = options.plotResiduals; 
+how2mean = options.meanSamples; 
 
 if signalThreshold==-1
     QClabel = 'noQC'; 
@@ -250,6 +251,15 @@ for p=probeSelection
     combinedCoord = cat(1,coordSample{1}, coordSample{2}, coordSample{3},...
         coordSample{4}, coordSample{5}, coordSample{6});
     
+    
+    
+    ROIind{1} = [expSampNorm{1,1}(:,1), ones(length(expSampNorm{1,1}(:,1)),1)]; 
+    ROIind{2} = [expSampNorm{2,1}(:,1), ones(length(expSampNorm{2,1}(:,1)),1)*2]; 
+    ROIind{3} = [expSampNorm{3,1}(:,1), ones(length(expSampNorm{3,1}(:,1)),1)*3];
+    ROIind{4} = [expSampNorm{4,1}(:,1), ones(length(expSampNorm{4,1}(:,1)),1)*4];
+    ROIind{5} = [expSampNorm{5,1}(:,1), ones(length(expSampNorm{5,1}(:,1)),1)*5];
+    ROIind{6} = [expSampNorm{6,1}(:,1), ones(length(expSampNorm{6,1}(:,1)),1)*6];
+    
     if calculateDS
         
         %----------------------------------------------------------------------------------
@@ -377,7 +387,7 @@ for p=probeSelection
         [averageCoexpression, parcelCoexpression, ...
             correctedCoexpression, Residuals, ...
             distExpVect, averageDistance, ...
-            c, parcelExpression] = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, W, ROIs,nROIs, Fit, correctDistance, resolution, xrange, doPlotCGE, doPlotResiduals);
+            c, parcelExpression] = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, W, ROIs, nROIs, Fit, correctDistance, resolution, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean);
         
         probeInformation.DS = DS';
     end

@@ -1,48 +1,71 @@
-function [expPlot, parcelCoexpression, correctedCoexpression, Residuals, distExpVect, distPlot, c, parcelExpression] = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, W, ROIs,nROIs, Fit, correctDistance, resolution, xrange, doPlotCGE, doPlotResiduals)
-
-if nargin<11
-    doPlotCGE = false; 
-    doPlotResiduals = false; 
-end
-
+function [expPlot, parcelCoexpression, correctedCoexpression, Residuals, distExpVect, distPlot, c, parcelExpression] = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, W, ROIs,nROIs, Fit, correctDistance, resolution, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean)
 
 if nargin<12
-    doPlotResiduals = false; 
+    doPlotCGE = false;
+    doPlotResiduals = false;
 end
 
 
-%sampleDistances = maskHalf(sampleDistances);
+if nargin<13
+    doPlotResiduals = false;
+end
+
+subjIND = vertcat(ROIind{1}(:,2), ROIind{2}(:,2), ROIind{3}(:,2), ROIind{4}(:,2), ROIind{5}(:,2), ROIind{6}(:,2)); 
 selectedGenesN = selectedGenes(:,DSvalues(:,1)); % take genes with highest DS values
 switch resolution
     case 'sample'
         
         sampleCoexpression = corr(selectedGenesN', 'type', 'Spearman'); % calculate sample-sample coexpression
-        %sampleCoexpression = maskHalf(sampleCoexpression);
+        
         
         sampleCoexpression(logical(eye(size(sampleCoexpression)))) = NaN; % replace diagonal with NaN
         distExpVect(:,1) = sampleDistances(:); % make a vector for distances
         distExpVect(:,2) = sampleCoexpression(:); % make a vector for coexpression values
         distExpVect(any(isnan(distExpVect), 2), :) = [];
         
-        %distExpVect(isnan(distExpVect,2), : ) = [];  % remove rows for diagonal elememns as thay will have 0 distance and 1 coexpression
-        
         Dvect = distExpVect(:,1);
         Rvect = distExpVect(:,2);
-%         if doPlot
-%             figure; imagesc(sampleCoexpression); caxis([-1,1]);title('Sample-sample coexpression');
-%             colormap([flipud(BF_getcmap('blues',9));[1 1 1]; BF_getcmap('reds',9)]);
-%         end
+        
     case 'ROI'
         parcelExpression = zeros(length(W), size(selectedGenesN,2));
-        for sub=1:length(W)
+        
+        if strcmp(how2mean, 'meanSamples')
             
-            A = ROIs == W(sub);
-            if length(find(A))>1
-                parcelExpression(sub,:) = nanmean(selectedGenesN(A==1,:));
-            else
-                parcelExpression(sub,:) = selectedGenesN(A==1,:);
+            
+            for samp=1:length(W)
+                
+                A = ROIs == W(samp);
+                if length(find(A))>1
+                    parcelExpression(samp,:) = nanmean(selectedGenesN(A==1,:));
+                else
+                    parcelExpression(samp,:) = selectedGenesN(A==1,:);
+                end
+                
             end
             
+        elseif strcmp(how2mean, 'meanSubjects')
+            parcelExpressionSubj = zeros(6, length(W), size(selectedGenesN,2));
+            
+            for samp=1:length(W)
+                for subj=1:size(ROIind,2)
+                    isSample = subjIND==subj; 
+                    isSubject = ROIs == W(samp);
+                    
+                    A = zeros(length(subjIND),1); 
+                    A(isSample==1 & isSubject==1) = 1; 
+
+                    if length(find(A))>1
+                        parcelExpressionSubj(subj,samp,:) = nanmean(selectedGenesN(A==1,:));
+                    elseif isempty(find(A, 1))
+                        parcelExpressionSubj(subj,samp,:) = NaN;
+                    else
+                        parcelExpressionSubj(subj,samp,:) = selectedGenesN(A==1,:);
+                    end
+
+                end
+            end
+            parcelExpression = squeeze(nanmean(parcelExpressionSubj,1)); 
+
         end
         
         [sROIs, ind] = sort(ROIs);
@@ -53,9 +76,9 @@ switch resolution
             for j=1:length(W)
                 
                 A = sROIs == W(sub);
-                B = sROIs == W(j);
+                isSubject = sROIs == W(j);
                 
-                D = distancesSorted(A,B);
+                D = distancesSorted(A,isSubject);
                 parcelDistances(sub,j) = nanmean(D(:));
                 
             end
@@ -200,15 +223,15 @@ switch resolution
         
         sampleCoexpression(logical(eye(size(sampleCoexpression)))) = NaN;
         coexpressionSorted = sampleCoexpression(ind, ind);
-%         if doPlot
-%             figure; subplot(1,25,[1 2]); imagesc(sROIs);
-%             subplot(1,25,[3 25]); imagesc(coexpressionSorted); caxis([-1,1]); title('Corrected coexpression sorted samples');
-%             colormap([flipud(BF_getcmap('blues',9));[1 1 1]; BF_getcmap('reds',9)]);
-%             set(gca,'xtick',[])
-%             set(gca,'xticklabel',[])
-%             set(gca,'ytick',[])
-%             set(gca,'yticklabel',[])
-%         end
+        %         if doPlot
+        %             figure; subplot(1,25,[1 2]); imagesc(sROIs);
+        %             subplot(1,25,[3 25]); imagesc(coexpressionSorted); caxis([-1,1]); title('Corrected coexpression sorted samples');
+        %             colormap([flipud(BF_getcmap('blues',9));[1 1 1]; BF_getcmap('reds',9)]);
+        %             set(gca,'xtick',[])
+        %             set(gca,'xticklabel',[])
+        %             set(gca,'ytick',[])
+        %             set(gca,'yticklabel',[])
+        %         end
         
         isNormP = zeros(length(W),length(W));
         isNormH = zeros(length(W),length(W));
@@ -217,18 +240,18 @@ switch resolution
             for j=1:length(W)
                 
                 A = sROIs == W(sub);
-                B = sROIs == W(j);
+                isSubject = sROIs == W(j);
                 %for corrected
                 if correctDistance == true
                     
-                    P = correctedCoexpressionSorted(A, B);
+                    P = correctedCoexpressionSorted(A, isSubject);
                     
                 else
                     
-                    P = coexpressionSorted(A, B);
+                    P = coexpressionSorted(A, isSubject);
                     
                 end
-                D = distancesSorted(A,B);
+                D = distancesSorted(A,isSubject);
                 parcelDistances(sub,j) = mean(D(:));
                 parcelCoexpression(sub,j) = mean(P(:));
                 
