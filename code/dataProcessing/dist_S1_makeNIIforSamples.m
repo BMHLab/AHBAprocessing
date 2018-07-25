@@ -1,5 +1,4 @@
-%% Author: Aurina
-%% Date modified: 2017-08-18
+
 %% This script:
 %   1. Makes a .nii file for all samples in a brain for each subject
 %%

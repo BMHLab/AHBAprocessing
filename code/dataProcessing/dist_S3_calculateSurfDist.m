@@ -1,5 +1,4 @@
-%% Author: Aurina
-%% Date modified: 2017-08-18
+
 %% This script:
 %   1. Chooses one vertex per sample on a surface
 %   2. calculates distances between samples on the surface

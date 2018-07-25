@@ -1,5 +1,4 @@
-%% Author: Aurina
-%% Date modified: 2017-08-18
+
 %% This script:
 %   1. loads .mgz files for each brain (with all samples in them)
 %   2. loads original orig.mgz file, pial surface of the brain, original
