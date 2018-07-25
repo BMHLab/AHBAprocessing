@@ -28,5 +28,7 @@ S4_normalisation - performs data normalisation and calculates correlated gene ex
 
 See README_processingPipeline.txt for more information. 
 
+To generate data for all four parcellations using selected options use processingPipeline_4parcellations.m script. 
+
 ### Analysis
 Figures in our paper can be regenerated using makeFigures.m script in the plotting folder. All scripts should be run from the root directory. Other relevant analysis scripts are in dataProcessing.
