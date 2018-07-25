@@ -125,6 +125,7 @@ options.normaliseWithinSample = false;
 options.xrange = [20 220]; 
 options.plotCGE = true; 
 options.plotResiduals = true; 
+options.meanSamples = 'meanSamples'; 
 
 fprintf('Generating data and making figure 9\n')
 c = S4_normalisation(options)

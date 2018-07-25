@@ -37,6 +37,7 @@ options.normaliseWithinSample = true;
 options.xrange = [0 200]; 
 options.plotCGE = false; 
 options.plotResiduals = false; 
+options.meanSamples = 'meanSamples'; %'meanSamples'; meanSubjects
 
 %------------------------------------------------------------------------------
 % 34 ROIs per hemisphere parcellation
