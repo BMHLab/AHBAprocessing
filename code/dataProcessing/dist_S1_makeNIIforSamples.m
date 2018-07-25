@@ -14,7 +14,7 @@ parcellation = {'aparcaseg'};%, 'cust100', 'cust250'};
 distanceThreshold = 2;
 sampleIND = cell(6,1);
 cd ('data/genes/processedData')
-load('MicroarrayDataWITHcustProbesUpdatedXXXRNAseq82DistThresh2.mat')
+load('MicroarrayDataWITHcustProbesUpdatedXXXRNAseqQC82DistThresh2.mat')
 cd ../../..
 for subject = subjects
     cd ('data/genes/parcellations')

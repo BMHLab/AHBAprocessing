@@ -8,11 +8,12 @@ distThreshold = 2;
 % samples assigned is slightly different too. - need to do this for each
 % parcellation. 
 cd ('data/genes/processedData')
-load(sprintf('MicroarrayDataWITHcustProbesUpdatedXXXRNAseq%dDistThresh%d.mat', parcellation, distThreshold))
+load(sprintf('MicroarrayDataWITHcustProbesUpdatedXXXRNAseqQC%dDistThresh%d.mat', parcellation, distThreshold))
 cd ..
 cd 'parcellations'
 [~, data_parcel]=read('MMPinMNI.nii');
 ROIs = 1:180; 
 coordsAssigned = samples2MNIparcellation(DataCoordinatesMNI, data_parcel, ROIs); 
 shortestDist = distanceONsurfaceMNI(data_parcel, ROIs, coordsAssigned); 
+cd ../../..
 

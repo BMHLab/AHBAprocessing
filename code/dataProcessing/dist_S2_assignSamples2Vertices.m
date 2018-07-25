@@ -18,7 +18,7 @@
 
 cd ('data/genes/processedData')
 %load('MicroarrayDatadPC82DistThresh2_CoordsAssigned.mat');
-load('MicroarrayDataWITHcustProbesUpdatedXXXRNAseq82DistThresh2.mat')
+load('MicroarrayDataWITHcustProbesUpdatedXXXRNAseqQC82DistThresh2.mat')
 cd ../forFreesurfer
 keepSamplesOrig = cell(6,1);
 keepSamples = cell(6,1);

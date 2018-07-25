@@ -1,5 +1,4 @@
 
-
 function hg38match = comparehg38VSAllen(hg38match, allenProbes)
 
 for k=1:size(hg38match,1)

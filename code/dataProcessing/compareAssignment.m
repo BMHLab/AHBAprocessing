@@ -1,6 +1,6 @@
 % import file as cell called dataCell
 % create empty variables to store info
-
+cd ('data/genes/probeReannotation')
 dataCell = importProbesALL('probes2annotateALL_merged_readAnnotation.txt');
 probeOK = zeros(size(dataCell,1)-1,1); 
 geneNames = cell(size(dataCell,1)-1,1); 
@@ -49,6 +49,8 @@ for i=1:length(probeOK)
    end
    
 end
+cd ..
+cd 'rawData'
 
 % remove rows where probes were not mapped uniquely
 probeNames(probeOK==0) = []; 
@@ -77,13 +79,6 @@ for g=1:numGenes
 end
 
 allenProbes = importAllenProbes('Probes.xlsx'); 
-% import original data from allen
-%fprintf(1,'Removing CUST probes\n')
-%cust = strfind(allenProbes.probeNames, 'CUST');
-%remInd = find(~cellfun(@isempty,cust));
-%fprintf(1,'%d CUST probes removed\n', length(remInd))
-%allenProbes(remInd,:) = [];
-
 % for all probes that were re-annotated check if entrezID matches the
 % reannotated entrezID.
 hg38match = comparehg38VSAllen(hg38match, allenProbes); 
@@ -97,12 +92,13 @@ fprintf('%d probes not assigned an ID in NCBI - removed\n', length(find(hg38matc
 fprintf('%d probes changed\n', length(find(hg38match.compare==2))); 
 fprintf('%d probes do not match\n', length(find(hg38match.compare==0)));
 
-
 fprintf('%d probes are mapped to genes\n', length(find(hg38match.compare==0))+ ...
     length(find(hg38match.compare==1))+length(find(hg38match.compare==2)))
 
 save('reannotatedProbes.mat', 'hg38match')
 %allenProbes = compareAllenVShg38(hg38match, allenProbes); 
+
+cd ../../..
 
 
 

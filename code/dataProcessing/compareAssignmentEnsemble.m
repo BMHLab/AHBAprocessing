@@ -1,6 +1,5 @@
 %% script to exclude probes that were assigned to multiple genes
-% Aurina 2018-01-09
-
+cd ('data/genes/rawData')
 
 %% import allen probes and remove CUST probes as they can't be annotated
 allenProbes = importAllenProbes('Probes.xlsx'); 
@@ -41,3 +40,4 @@ fprintf(1,'%d probes are mismatching\n', nmm)
 nu = length(find(updatedMatching.compare==2));
 fprintf(1,'%d probes are introduced with IDs\n', nu)
 
+cd ../../..
