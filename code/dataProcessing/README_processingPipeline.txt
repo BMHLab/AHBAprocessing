@@ -192,6 +192,11 @@ true: normalise expression values within sample before within gene normalisation
 false: do not normalise expression values within sample before within
 gene normalisation
 %------------------------------------------------------------------------------
+options.meanSamples = 'meanSamples'; 
+'meanSamples' when multiple samples are available in a region, the mean of all samples is calculated to summarise the expression vector. The “weight” of every sample in that region is equal. 
+‘meanSubjects’ when multiple samples are available in a region, the average of samples for each subject is calculated first, and then the mean expression determined as an average across the brains. The “weight” of every subjects that has samples in that region is equal. 
+see Figure 7 for more details. 
+%------------------------------------------------------------------------------
 
 S1_extractData(options)
 S2_probes(options)
