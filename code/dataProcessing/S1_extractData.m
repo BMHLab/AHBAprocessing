@@ -250,8 +250,10 @@ elseif strcmp(updateProbes, 'reannotator')
         DataTable.Expression{s,1} = DataTable.Expression{s,1}(INDold,:);
         DataTable.Noise{s,1} = DataTable.Noise{s,1}(INDold,:);
     end
-else
+end
     % if chosen not to update probes, then remove ones with missing entrezIDs
+    % Also remove any probes with NaN values assigned to them after
+    % re-annotation (if there are any)
     %------------------------------------------------------------------------------
     % Make a table from all the data
     %------------------------------------------------------------------------------
@@ -265,7 +267,7 @@ else
     GeneSymbol(isnan(EntrezID)) = [];
     ProbeID(isnan(EntrezID)) = [];
     EntrezID(isnan(EntrezID)) = [];
-end
+
 
 fprintf(1,'%d unique genes\n', length(unique(EntrezID)))
 
