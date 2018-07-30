@@ -37,8 +37,6 @@ After downloading [data from figshare](https://figshare.com/s/441295fe494375aa0c
     AddPaths
     % Run all data processing scripts from scratch (with default options):
     processingPipeline
-    % Generate Figure 3:
-    figure3()
     % Generate ALL figures:
     makeFigures
 ```
