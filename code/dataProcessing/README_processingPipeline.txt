@@ -3,15 +3,14 @@ This is a README file for the processingPipeline.m script
 %------------------------------------------------------------------------------
 General comments
 %------------------------------------------------------------------------------
-1. Probe-to-gene re-annotation provided with this data has been performed at the beginning of 2018. When performing analyses, it is recommended to use the latest available data, therefore new probe-to-gene re-annotations should be performed. This can be done using different software packages: 
+1. Probe-to-gene re-annotation provided with this data has been performed at the beginning of 2018. When performing analyses, it is recommended to use the latest available data, therefore new probe-to-gene re-annotations should be performed. This can be done using different software packages:
 	- Re-annotator (software: https://sourceforge.net/projects/reannotator/; article: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0139516). For more information on how to perform the re-annotation, please see README_Reannotator.txt
 	- biomart (http://asia.ensembl.org/biomart/martview/64a0f53ea90ed52bf1641929d9fe7f9f)
-	- AnnotationDbi (https://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html). 
-2. Distances between samples on the cortical surface and within grey matter volume were calculated using aparcaseg parcellation (34 regions per hemisphere + 7 subcortical regions). Samples were matched to the regions of interest by generating parcellations in subject-specific spaces for every brain, therefore the number of mapped samples (after applying a selected distance threshold) onto each parcellation is slightly different. In order to use distances between samples calculated within the grey matter volume and on the cortical surface for other parcellations (HCP, cust100 or cust250), the mapping and calculations should be performed separately. 
-For more details on how this was done, please refer to: 
+	- AnnotationDbi (https://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html).
+2. Distances between samples on the cortical surface and within grey matter volume were calculated using aparcaseg parcellation (34 regions per hemisphere + 7 subcortical regions). Samples were matched to the regions of interest by generating parcellations in subject-specific spaces for every brain, therefore the number of mapped samples (after applying a selected distance threshold) onto each parcellation is slightly different. In order to use distances between samples calculated within the grey matter volume and on the cortical surface for other parcellations (HCP, cust100 or cust250), the mapping and calculations should be performed separately.
+For more details on how this was done, please refer to:
 	- calculateDistancesGMinMNI.m, a script that contains functions to calculate distances between samples within the grey matter volume.
-	- dist_S1…, dist_S2…, dist_S3…, scripts to calculate distances on the cortical surface. This involves using freesurfer - the example of code is provided in runSurf2surf.sh script.  
-
+	- dist_S1…, dist_S2…, dist_S3…, scripts to calculate distances on the cortical surface. This involves using freesurfer - the example of code is provided in runSurf2surf.sh script.
 
 %------------------------------------------------------------------------------
 Comments about processingPipeline.m script
@@ -192,10 +191,10 @@ true: normalise expression values within sample before within gene normalisation
 false: do not normalise expression values within sample before within
 gene normalisation
 %------------------------------------------------------------------------------
-options.meanSamples = 'meanSamples'; 
-'meanSamples' when multiple samples are available in a region, the mean of all samples is calculated to summarise the expression vector. The “weight” of every sample in that region is equal. 
-‘meanSubjects’ when multiple samples are available in a region, the average of samples for each subject is calculated first, and then the mean expression determined as an average across the brains. The “weight” of every subjects that has samples in that region is equal. 
-see Figure 7 for more details. 
+options.meanSamples = 'meanSamples';
+'meanSamples' when multiple samples are available in a region, the mean of all samples is calculated to summarise the expression vector. The “weight” of every sample in that region is equal.
+‘meanSubjects’ when multiple samples are available in a region, the average of samples for each subject is calculated first, and then the mean expression determined as an average across the brains. The “weight” of every subjects that has samples in that region is equal.
+see Figure 7 for more details.
 %------------------------------------------------------------------------------
 
 S1_extractData(options)
