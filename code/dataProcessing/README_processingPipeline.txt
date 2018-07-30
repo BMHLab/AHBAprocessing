@@ -10,7 +10,7 @@ General comments
 2. Distances between samples on the cortical surface and within grey matter volume were calculated using aparcaseg parcellation (34 regions per hemisphere + 7 subcortical regions). Samples were matched to the regions of interest by generating parcellations in subject-specific spaces for every brain, therefore the number of mapped samples (after applying a selected distance threshold) onto each parcellation is slightly different. In order to use distances between samples calculated within the grey matter volume and on the cortical surface for other parcellations (HCP, cust100 or cust250), the mapping and calculations should be performed separately.
 For more details on how this was done, please refer to:
 	- calculateDistancesGMinMNI.m, a script that contains functions to calculate distances between samples within the grey matter volume.
-	- dist_S1…, dist_S2…, dist_S3…, scripts to calculate distances on the cortical surface. This involves using freesurfer - the example of code is provided in runSurf2surf.sh script.
+	- dist_S1, dist_S2, dist_S3, scripts to calculate distances on the cortical surface. This involves using freesurfer - the example of code is provided in runSurf2surf.sh script.
 
 %------------------------------------------------------------------------------
 Comments about processingPipeline.m script
