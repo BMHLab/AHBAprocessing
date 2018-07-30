@@ -1,19 +1,21 @@
-
-%% This script:
-%   1. Loads all microarray data from excell files for each subject
-%   2. Excludes custom probes;
+function S1_extractData(options)
+% S1_extractData:
+%   1. Loads all microarray data from excel files for each subject
+%   2. Excludes custom probes
 %   3. Excludes probes with missing entrezIDs or updates probe to gene
 %   assignment (depending on options chosen)
 %   4. Saves expression data, coordinates, sample structure names for all samples
 %   5. Saves data for separate subjects to DataTable
 %   6. Saves data for all subjects combined as variables 'MicorarrayDataXXX.mat' file
-
-function S1_extractData(options)
+%-------------------------------------------------------------------------------
 
 ExcludeCBandBS = options.ExcludeCBandBS;  % will exclude samples from brainstem and cerebellum
 useCUSTprobes = options.useCUSTprobes; % use CUST probes
 updateProbes = options.updateProbes; % update probe --> gene assignment based on latest data
 
+%-------------------------------------------------------------------------------
+% Check input options and give output:
+%-------------------------------------------------------------------------------
 if ExcludeCBandBS
     fprintf(1,'Brainstem and cerebellum samples will be EXCLUDED\n')
 else
@@ -34,7 +36,8 @@ else
     startFileName = 'MicroarrayData';
 end
 
-cd ('data/genes/rawData');
+%-------------------------------------------------------------------------------
+cd('data/genes/rawData');
 %% load probe information (same for all subjects)
 fprintf(1,'Loading Probes.xlsx file\n')
 FileProbes = 'Probes.xlsx';
@@ -50,8 +53,8 @@ GeneName = ProbeTable.gene_name;
 % entrez IDs because some of them can be updated
 fprintf(1,'%d probes with missing entrez IDs\n', sum(isnan(EntrezID)));
 % creat a Data cell to store the output
-headerdata = {'Expression' , 'MMcoordinates', 'StructureName', 'MRIvoxCoordinates', 'Noise', 'SampleID', 'WellID'};
-headerprobe = { 'ProbeID', 'EntrezID','ProbeName', 'GeneSymbol'};
+headerdata = {'Expression', 'MMcoordinates', 'StructureName', 'MRIvoxCoordinates', 'Noise', 'SampleID', 'WellID'};
+headerprobe = { 'ProbeID', 'EntrezID', 'ProbeName', 'GeneSymbol'};
 Data = cell(6,7);
 DataProbe = cell(1,4);
 
@@ -62,7 +65,7 @@ DataProbe = cell(1,4);
 for subj=1:6
     fprintf(1,'Loading data for %u subject\n', subj)
     folder = sprintf('normalized_microarray_donor0%d', subj);
-    cd (folder);
+    cd(folder);
     %%load information specific for each subject
     FileMicroarray = 'MicroarrayExpression.csv';
     FileAnnot = 'SampleAnnot.xlsx';
@@ -126,8 +129,7 @@ for subj=1:6
     Data{subj,5} = noise;
     Data{subj,6} = SampleID;
     Data{subj,7} = WellID;
-    cd ..
-
+    cd('..')
 end
 
 % %------------------------------------------------------------------------------
@@ -147,19 +149,18 @@ if ~useCUSTprobes
     ProbeName(remInd) = {NaN};
     ProbeID(remInd) = NaN;
 
-ProbeName(isnan(ProbeID)) = [];
-EntrezID(isnan(ProbeID)) = [];
-GeneID(isnan(ProbeID)) = [];
-GeneSymbol(isnan(ProbeID)) = [];
-GeneName(isnan(ProbeID)) = [];
+    ProbeName(isnan(ProbeID)) = [];
+    EntrezID(isnan(ProbeID)) = [];
+    GeneID(isnan(ProbeID)) = [];
+    GeneSymbol(isnan(ProbeID)) = [];
+    GeneName(isnan(ProbeID)) = [];
 
     for s=1:6
        DataTable.Expression{s,1}(isnan(ProbeID),:) = [];
        DataTable.Noise{s,1}(isnan(ProbeID),:) = [];
     end
 
-ProbeID(isnan(ProbeID)) = [];
-
+    ProbeID(isnan(ProbeID)) = [];
 end
 
 if strcmp(updateProbes, 'Biomart')
@@ -215,11 +216,9 @@ elseif strcmp(updateProbes, 'reannotator')
     % if cust probes are to be excluded, test only Agilent to get the
     % numbers.
    if ~useCUSTprobes
-
        cust = strfind(hg38match.probeNames, 'CUST');
        remInd = find(~cellfun(@isempty,cust));
        hg38match(remInd,:) = [];
-
    end
 
     % sumarise the information in numbers
@@ -238,7 +237,6 @@ elseif strcmp(updateProbes, 'reannotator')
     fprintf(1,'Removing probes not mapped to genes\n')
     fprintf(1,'Removing %d irrelevant probes\n', nnu)
 
-
     % find probes that are in both lists and replace geneSymbol and entrezIDs
     % with updated.
     [probesSelect, INDold, INDnew] = intersect(ProbeName, hg38match.probeNames);
@@ -248,15 +246,11 @@ elseif strcmp(updateProbes, 'reannotator')
     EntrezID = hg38match.ID(INDnew);
     GeneSymbol = hg38match.geneNames(INDnew);
 
-
-
     for s=1:6
         DataTable.Expression{s,1} = DataTable.Expression{s,1}(INDold,:);
         DataTable.Noise{s,1} = DataTable.Noise{s,1}(INDold,:);
     end
-
-
-end
+else
     % if chosen not to update probes, then remove ones with missing entrezIDs
     %------------------------------------------------------------------------------
     % Make a table from all the data
@@ -271,18 +265,19 @@ end
     GeneSymbol(isnan(EntrezID)) = [];
     ProbeID(isnan(EntrezID)) = [];
     EntrezID(isnan(EntrezID)) = [];
+end
 
-    fprintf(1,'%d unique genes\n', length(unique(EntrezID)))
+fprintf(1,'%d unique genes\n', length(unique(EntrezID)))
 
 %------------------------------------------------------------------------------
 % Assign ProbeIDs, EntrezIDs and ProbeNames to Data cell.
 %------------------------------------------------------------------------------
-
 DataProbe{1,1} = ProbeID;
 DataProbe{1,2} = EntrezID;
 DataProbe{1,3} = ProbeName;
 DataProbe{1,4} = GeneSymbol;
 DataTableProbe = dataset({DataProbe, headerprobe{:}});
+
 %------------------------------------------------------------------------------
 % Combine data for all subjects
 %------------------------------------------------------------------------------
@@ -296,14 +291,16 @@ noiseall = horzcat(DataTable{1,5}, DataTable{2,5}, DataTable{3,5}, DataTable{4,5
 %------------------------------------------------------------------------------
 % Save relevant variables to a MicroarrayData.mat file
 %------------------------------------------------------------------------------
-cd ..
-cd ('processedData');
+cd('..')
+cd('processedData');
 
 fprintf(1,'Saving data to the file\n')
 if strcmp(updateProbes, 'reannotator') || strcmp(updateProbes, 'Biomart')
-save(sprintf('%sProbesUpdatedXXX.mat', startFileName), 'DataTable','DataTableProbe', 'Expressionall', 'Coordinatesall', 'StructureNamesall', 'MRIvoxCoordinatesAll', 'noiseall', 'options');
+    save(sprintf('%sProbesUpdatedXXX.mat', startFileName), 'DataTable','DataTableProbe', 'Expressionall', 'Coordinatesall', 'StructureNamesall', 'MRIvoxCoordinatesAll', 'noiseall', 'options');
 else
-save(sprintf('%sXXX.mat', startFileName), 'DataTable','DataTableProbe', 'Expressionall', 'Coordinatesall', 'StructureNamesall', 'MRIvoxCoordinatesAll', 'noiseall', 'options');
+    save(sprintf('%sXXX.mat', startFileName), 'DataTable','DataTableProbe', 'Expressionall', 'Coordinatesall', 'StructureNamesall', 'MRIvoxCoordinatesAll', 'noiseall', 'options');
 end
-cd ../../..
+
+cd('../../../')
+
 end
