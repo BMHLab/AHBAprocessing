@@ -1,65 +1,64 @@
 function [hdr,data]=read(filename)
 
-machineformat='ieee-le'; 
+machineformat='ieee-le';
 
 ind=findstr(filename,'.');
 if ~isempty(ind)
-    fileprefix=filename(1:ind-1); 
+    fileprefix=filename(1:ind-1);
 else
     fileprefix=filename;
 end
 
 if exist(strcat(fileprefix,'.hdr'),'file') &  exist(strcat(fileprefix,'.img'),'file')
-    type=0; 
+    type=0;
     hdr_filename=strcat(fileprefix,'.hdr');
-    data_filename=strcat(fileprefix,'.img'); 
+    data_filename=strcat(fileprefix,'.img');
 elseif exist(strcat(fileprefix,'.nii'),'file')
     type=1;
     hdr_filename=strcat(fileprefix,'.nii');
-    data_filename=strcat(fileprefix,'.nii');    
+    data_filename=strcat(fileprefix,'.nii');
 else
-    error('File missing.\n'); 
+    error('File missing.\n');
 end
 
-    
-fid=fopen(hdr_filename,'r',machineformat); 
-hdr=read_hdr(fid); 
+
+fid=fopen(hdr_filename,'r',machineformat);
+hdr=read_hdr(fid);
 fclose(fid);
-if hdr.key.sizeof_hdr~=348 
+if hdr.key.sizeof_hdr~=348
     switch machineformat
-        case 'ieee-le' 
-            machineformat='ieee-be'; 
-        case 'ieee-be' 
-            machineformat='ieee-le'; 
+        case 'ieee-le'
+            machineformat='ieee-be';
+        case 'ieee-be'
+            machineformat='ieee-le';
     end
-    fid=fopen(hdr_filename,'r',machineformat); 
+    fid=fopen(hdr_filename,'r',machineformat);
     hdr=read_hdr(fid);
     fclose(fid);
     if hdr.key.sizeof_hdr~=348
-        error('Invalid header.\n'); 
+        error('Invalid header.\n');
     end
 end
 
 precision=get_precision(hdr);
 % fid=fopen(data_filename,'r',machineformat);
-% precision=get_precision(hdr);  
+% precision=get_precision(hdr);
 % if type==1
 %     fseek(fid,double(hdr.dim.vox_offset),'bof');
 % end
 % raw_data=zeros(1,prod(hdr.dim.dim(2:5)),precision);
 % data=zeros([hdr.dim.dim(2:5)],precision);
-% raw_data=fread(fid,prod(hdr.dim.dim(2:5)),strcat('*',precision)); 
+% raw_data=fread(fid,prod(hdr.dim.dim(2:5)),strcat('*',precision));
 % data=squeeze(reshape(raw_data,[hdr.dim.dim(2:5)]));
 % fclose(fid);
 
 if type==1;
     of=double(hdr.dim.vox_offset);
 else
-    of=0; 
+    of=0;
 end
 
-precision
-img=memmapfile(data_filename,'offset',of,'Format',precision); 
+img=memmapfile(data_filename,'offset',of,'Format',precision);
 img_cpy=img.data;
 data=zeros([hdr.dim.dim(2:5)],precision);
 data=squeeze(reshape(img_cpy,[hdr.dim.dim(2:5)]));
@@ -95,7 +94,7 @@ hdr.dim.slice_duration = fread(fid,1,'float32')';
 hdr.dim.toffset        = fread(fid,1,'float32')';
 hdr.dim.glmax          = fread(fid,1,'int32')';
 hdr.dim.glmin          = fread(fid,1,'int32')';
-   
+
 hdr.hist.descrip       = deblank(fread(fid,80,'*char')');
 hdr.hist.aux_file      = deblank(fread(fid,24,'*char')');
 hdr.hist.qform_code    = fread(fid,1,'int16')';
@@ -114,45 +113,42 @@ hdr.hist.magic         = deblank(fread(fid,4,'*char')');
 fseek(fid,253,'bof');
 hdr.hist.originator    = fread(fid, 5,'int16')';
 
-return; 
+return;
 
 %%%%
 function precision=get_precision(hdr)
-
-switch hdr.dim.datatype
-    case   1,
-        precision = 'ubit1';
-    case   2,
-        precision = 'uint8';
-    case   4,
-        precision = 'int16';
-    case   8,
-        precision = 'int32';
-    case  16,
-        precision = 'single';
-    case  32,
-        precision = 'single';
-    case  64,
-        precision = 'double';
-    case 128,
-        precision = 'uint8';
-    case 256 
-        precision = 'int8';
-    case 511 
-        precision = 'float32';
-    case 512 
-        precision = 'uint16';
-    case 768 
-        precision = 'uint32';
-    case 1024
-        precision = 'int64';
-    case 1280
-        precision = 'uint64';
-    case 1792,
-        precision = 'float64';
-    otherwise
-        error('Unknown data precision.\n'); 
-end
-
+    switch hdr.dim.datatype
+        case   1,
+            precision = 'ubit1';
+        case   2,
+            precision = 'uint8';
+        case   4,
+            precision = 'int16';
+        case   8,
+            precision = 'int32';
+        case  16,
+            precision = 'single';
+        case  32,
+            precision = 'single';
+        case  64,
+            precision = 'double';
+        case 128,
+            precision = 'uint8';
+        case 256
+            precision = 'int8';
+        case 511
+            precision = 'float32';
+        case 512
+            precision = 'uint16';
+        case 768
+            precision = 'uint32';
+        case 1024
+            precision = 'int64';
+        case 1280
+            precision = 'uint64';
+        case 1792,
+            precision = 'float64';
+        otherwise
+            error('Unknown data precision.\n');
+    end
 return;
-    

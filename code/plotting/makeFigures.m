@@ -4,17 +4,20 @@
 % At each step sequential data generation steps will be applied as needed
 % % ------------------------------------------------------------------------------
 % Generate initial data
+options = struct();
 options.ExcludeCBandBS = true;
 options.useCUSTprobes = true;
 options.updateProbes = 'reannotator';
 fprintf('Generating the initial data\n')
 S1_extractData(options)
+
 % % ------------------------------------------------------------------------------
 % Reproducing the figures
 % % ------------------------------------------------------------------------------
 % Figure 3
 % % ------------------------------------------------------------------------------
 figure3()
+
 % % ------------------------------------------------------------------------------
 % Figure 4AC
 % % ------------------------------------------------------------------------------
@@ -30,6 +33,7 @@ afterQC = false;
 Regeneratedata = false;
 fprintf('Making figure 4 A and C\n')
 figure4AC(data2use, afterQC, options, Regeneratedata)
+
 % % ------------------------------------------------------------------------------
 % Figure 4B
 % % ------------------------------------------------------------------------------
@@ -82,6 +86,7 @@ numROIs = 34;
 whatNormalisation = 'zscore';
 fprintf('Making figure 6B\n')
 subplot(2,2,2); figure6ABCD(doNormalise,numROIs,whatNormalisation)
+
 % % ------------------------------------------------------------------------------
 % Figure 6C
 % % ------------------------------------------------------------------------------
@@ -90,6 +95,7 @@ numROIs = 34;
 whatNormalisation = 'scaledRobustSigmoid';
 fprintf('Making figure 6C\n')
 subplot(2,2,3); figure6ABCD(doNormalise,numROIs,whatNormalisation)
+
 % % ------------------------------------------------------------------------------
 % Figure 6D
 % % ------------------------------------------------------------------------------
@@ -99,6 +105,7 @@ whatNormalisation = 'scaledRobustSigmoid';
 uselimma = true;
 fprintf('Making figure 6D\n')
 subplot(2,2,4); figure6ABCD(doNormalise,numROIs,whatNormalisation, uselimma)
+
 % % ------------------------------------------------------------------------------
 % Figure 6E
 % % ------------------------------------------------------------------------------
@@ -149,6 +156,7 @@ Regeneratedata = false;
 fprintf('Making figure S2\n')
 figure4AC(data2use, afterQC, options, Regeneratedata)
 pause(5)
+
 % % ------------------------------------------------------------------------------
 % Figure S3
 % % ------------------------------------------------------------------------------
@@ -170,6 +178,7 @@ numROIs = 41;
 % 41 - for left cortex + subcortex
 subplot(1,2,2);
 figure6ABCD(doNormalise,numROIs)
+
 % % ------------------------------------------------------------------------------
 % Figure S5
 % % ------------------------------------------------------------------------------
@@ -210,6 +219,7 @@ options.plotResiduals = true;
 
 fprintf('Making figure S4 C and D \n')
 c = S4_normalisation(options)
+
 % % ------------------------------------------------------------------------------
 % Figure S6
 % % ------------------------------------------------------------------------------
@@ -236,7 +246,6 @@ howTOnormalise = 'together';
 fprintf('Making figure S6A \n')
 figureS6(howTOnormalise)
 
-
 options.normaliseWhat = 'LcortexSubcortexSEPARATE'; %'LcortexSubcortexSEPARATE';% what part of the brain is normalised
 fprintf('Generating data for figure S6B \n')
 S4_normalisation(options);
@@ -257,14 +266,14 @@ options.distanceCorrection = 'Euclidean';
 options.Fit = {'removeMean'};
 options.normaliseWhat = 'Lcortex'; %'LcortexSubcortexSEPARATE';% what part of the brain is normalised
 options.normMethod = 'scaledRobustSigmoid'; % what type of normalisation method used
-options.percentDS =  10;
 options.doNormalise = true;
 options.resolution = 'ROI';
 options.saveOutput = true;
 options.normaliseWithinSample = false;
-options.xrange = [20 160];
 options.plotCGE = true;
 options.plotResiduals = false;
+options.percentDS =  10;
+options.xrange = [20 160];
 % A) 10% DS genes, low resolution parcellation
 fprintf('Making figure S7A \n')
 S4_normalisation(options);
@@ -288,11 +297,9 @@ fprintf('Making figure S7C \n')
 S4_normalisation(options);
 title({sprintf('%d%% DS genes', options.percentDS); 'high wesolution parcellation'});
 
-
 % D) 100% DS genes, high resolution parcellation
 options.percentDS =  100;
 options.xrange = [0 160];
 fprintf('Making figure S7D \n')
 S4_normalisation(options);
 title({sprintf('%d%% DS genes', options.percentDS); 'high wesolution parcellation'});
-
