@@ -47,6 +47,6 @@ switch lower(coordef)
         error('unknown coordinate definition. Input EITHER ''mni'' or ''xyz''');
 end
 xyznew = [x,y,z]; 
-fprintf('Outputting %s coordinates\n',outtype);
+%fprintf('Outputting %s coordinates\n',outtype);
 
 end
