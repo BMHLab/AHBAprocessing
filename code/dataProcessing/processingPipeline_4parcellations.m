@@ -15,7 +15,7 @@ options.probeSelections = {'DS'};
 options.signalThreshold = 0.5; 
 options.RNAseqThreshold = 0.2; 
 options.RNAsignThreshold = false; 
-saveOutput = options.saveOutput;
+options.saveOutput = true;
 
 S1_extractData(options)
 S2_probes(options)

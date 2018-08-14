@@ -18,15 +18,15 @@ normMethod = options.normMethod;
 normaliseWhat = options.normaliseWhat;
 normSample = options.normaliseWithinSample;
 signalThreshold = options.signalThreshold;
-xrange = options.xrange; 
-doPlotCGE = options.plotCGE; 
-doPlotResiduals = options.plotResiduals; 
-how2mean = options.meanSamples; 
+xrange = options.xrange;
+doPlotCGE = options.plotCGE;
+doPlotResiduals = options.plotResiduals;
+how2mean = options.meanSamples;
 
 if signalThreshold==-1
-    QClabel = 'noQC'; 
+    QClabel = 'noQC';
 else
-    QClabel = 'QC'; 
+    QClabel = 'QC';
 end
 
 if normSample
@@ -112,7 +112,7 @@ for p=probeSelection
     %2. get DS values for each gene
     %3. take top X% of DS genes
     %----------------------------------------------------------------------------------
-    
+    indREM = cell(1,length(subjects));
     for sub=subjects
         % normalise data for each subject separately using samples
         expSingleSubj = DataExpression{sub,1};
@@ -161,18 +161,16 @@ for p=probeSelection
                                 data = Norm_hampel(data')';
                             end
                             dataNorm1 = Norm_hampel(data);
-                            indREM = find(all(isnan(dataNorm1),1));
-                            dataNorm1(:,indREM) = [];
-                            data(:,indREM) = [];
+                            % save index for genes that could not be
+                            % normalised
+                            indREM{sub} = find(all(isnan(dataNorm1),1));
                             fprintf('Normalising gene expression data\n')
                         otherwise
                             if normSample
                                 data = BF_NormalizeMatrix(data', normMethod)';
                             end
                             dataNorm1 = BF_NormalizeMatrix(data, normMethod);
-                            indREM = find(all(isnan(dataNorm1),1));
-                            dataNorm1(:,indREM) = [];
-                            data(:,indREM) = [];
+                            indREM{sub} = find(all(isnan(dataNorm1),1));
                             fprintf('Normalising gene expression data\n')
                     end
                     DATA{kk} = dataNorm1;
@@ -193,18 +191,14 @@ for p=probeSelection
                             data = Norm_hampel(data')';
                         end
                         dataNorm = Norm_hampel(data);
-                        indREM = find(all(isnan(dataNorm),1));
-                        dataNorm(:,indREM) = [];
-                        data(:,indREM) = [];
+                        indREM{sub} = find(all(isnan(dataNorm),1));
                         fprintf('Normalising gene expression data\n')
                     otherwise
                         if normSample
                             data = BF_NormalizeMatrix(data', normMethod)';
                         end
                         dataNorm = BF_NormalizeMatrix(data, normMethod);
-                        indREM = find(all(isnan(dataNorm),1));
-                        dataNorm(:,indREM) = [];
-                        data(:,indREM) = [];
+                        indREM{sub} = find(all(isnan(dataNorm),1));
                         fprintf('Normalising gene expression data\n')
                 end
         end
@@ -247,14 +241,20 @@ for p=probeSelection
     % Combine noramlised data for all subjects.
     %----------------------------------------------------------------------------------
     
+    % combine indexes for badly-normalised genes
+    removeGenes = unique(cell2mat(indREM));
+    % remove those genes
+    for subj=1:length(subjects)
+        expressionSubjROI{subj}(:,removeGenes+2) = [];
+        expSampNorm{subj}(:,removeGenes+1) = [];
+    end
+    
     expSampNormalisedAll = vertcat(expSampNorm{1}, expSampNorm{2},expSampNorm{3},expSampNorm{4},expSampNorm{5},expSampNorm{6});
     combinedCoord = cat(1,coordSample{1}, coordSample{2}, coordSample{3},...
         coordSample{4}, coordSample{5}, coordSample{6});
     
-    
-    
-    ROIind{1} = [expSampNorm{1,1}(:,1), ones(length(expSampNorm{1,1}(:,1)),1)]; 
-    ROIind{2} = [expSampNorm{2,1}(:,1), ones(length(expSampNorm{2,1}(:,1)),1)*2]; 
+    ROIind{1} = [expSampNorm{1,1}(:,1), ones(length(expSampNorm{1,1}(:,1)),1)];
+    ROIind{2} = [expSampNorm{2,1}(:,1), ones(length(expSampNorm{2,1}(:,1)),1)*2];
     ROIind{3} = [expSampNorm{3,1}(:,1), ones(length(expSampNorm{3,1}(:,1)),1)*3];
     ROIind{4} = [expSampNorm{4,1}(:,1), ones(length(expSampNorm{4,1}(:,1)),1)*4];
     ROIind{5} = [expSampNorm{5,1}(:,1), ones(length(expSampNorm{5,1}(:,1)),1)*5];
@@ -272,7 +272,7 @@ for p=probeSelection
         indexk = cell(numSubjects,numSubjects);
         indexjp = cell(numSubjects,numSubjects);
         corellations = cell(numSubjects,numSubjects);
-        numGenes = size(expressionSubjROI{1,1},2)-2;
+        numGenes = size(expSampNormalisedAll,2)-1;
         
         %----------------------------------------------------------------------------------
         % Get ROIs that are in all subjects
@@ -350,7 +350,7 @@ for p=probeSelection
         %----------------------------------------------------------------------------------
         % Take selected genes and calculate sample - sample coexpression
         %----------------------------------------------------------------------------------
-        fprintf('Calculating coexpression between samples, performing coexpression-distance correctio and averaging coexpression to ROIs\n')
+        fprintf('Calculating coexpression between samples, performing coexpression-distance correction and averaging coexpression to ROIs\n')
         
         selectedGenes = expSampNormalisedAll(:,2:end);
         switch distanceCorrection
@@ -358,18 +358,36 @@ for p=probeSelection
                 % calculate euclidean distance on MNI coordinates
                 sampleDistances = pdist2(combinedCoord(:,2:end), combinedCoord(:,2:end));%
             case 'GMvolume'
-                % load pre-calculated distances within GM volume
-                load('distancesGM_MNIXXX.mat');
+                if strcmp(parcellation, 'aparcaseg')
+                    % load pre-calculated distances within GM volume
+                    load('distancesGM_MNIXXX.mat');
+                else
+                    cd ../../..
+                    error('Please provide a distance file calculated within GM volume for this parcellation and modify the script to load it in or altetnatively choose Euclidean distance estimation')
+                end
                 sampleDistances = distSamples;
             case 'Surface'
+                if strcmp(parcellation, 'aparcaseg')
+                    % load pre-calculated distances within GM volume
+                    load('DistancesONsurfaceXXX.mat');
+                else
+                    cd ../../..
+                    error('Please provide a distance file calculated on the surface for this parcellation and modify the script to load it in or altetnatively choose Euclidean distance estimation')
+                end
                 % load pre-calculated distances on surface
-                load('DistancesONsurfaceXXX.mat');
+                
                 sampleDistances = distSamples;
             case 'SurfaceANDEuclidean'
+                if strcmp(parcellation, 'aparcaseg')
+                    % load pre-calculated distances within GM volume
+                    load('DistancesONsurfaceXXX.mat');
+                else
+                    cd ../../..
+                    error('Please provide a distance file calculated on the surface for this parcellation and modify the script to load it in or altetnatively choose Euclidean distance estimation')
+                end
                 % calculate euclidean between all samples
                 sampleDistancesSubcortex = pdist2(combinedCoord(:,2:end), combinedCoord(:,2:end));%
                 % load surface distances for cortical samples
-                load('DistancesONsurfaceXXX.mat');
                 sampleDistancesCortex = distSamples;
                 % first samples in the distance matrix are
                 % cortical, so replace euclidean distance with
@@ -394,13 +412,13 @@ for p=probeSelection
     SampleCoordinates = sortrows(combinedCoord,1);
     SampleGeneExpression = sortrows(expSampNormalisedAll,1);
     
-    probeInformation.EntrezID(indREM) = [];
-    probeInformation.GeneSymbol(indREM) = [];
-    probeInformation.ProbeID(indREM) = [];
-    probeInformation.ProbeName(indREM) = [];
+    probeInformation.EntrezID(removeGenes) = [];
+    probeInformation.GeneSymbol(removeGenes) = [];
+    probeInformation.ProbeID(removeGenes) = [];
+    probeInformation.ProbeName(removeGenes) = [];
     
     % add ROI numbers for each row
-    parcelExpression = [W, parcelExpression]; 
+    parcelExpression = [W, parcelExpression];
     if correctDistance
         save(sprintf('%dDS%d%s%s%s%s%d%s_%s_distCorr%s.mat', percentDS, numNodes, normMethod, normHow, p{1}, QClabel,  doNormalise, normaliseWhat, resolution, distanceCorrection), 'SampleCoordinates', 'SampleGeneExpression', 'probeInformation', 'optionsSave', 'averageCoexpression', 'averageDistance', 'parcelExpression');
         
