@@ -65,7 +65,7 @@ for p=probeSelection
         RightCortex = 266:515;
         RightSubcortex = 516:530;
         
-    elseif strcmp(parcellation, 'HCP')
+   elseif strcmp(parcellation, 'HCP') || strcmp(parcellation, 'HCPmni')
         numNodes = 360;
         LeftCortex = 1:180;
         RightCortex = 181:360;
