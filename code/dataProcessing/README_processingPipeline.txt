@@ -200,3 +200,91 @@ then use the appropriate threshold
 options.distanceThreshold = 2;
 S3_samples2parcellation(options)
 c = S4_normalisation(options)
+%------------------------------------------------------------------------------
+Additional information
+%------------------------------------------------------------------------------
+Region labels for aparcaseg parcellation
+1    ctx-lh-bankssts
+2    ctx-lh-caudalanteriorcingulate
+3    ctx-lh-caudalmiddlefrontal
+4    ctx-lh-cuneus
+5    ctx-lh-entorhinal
+6    ctx-lh-fusiform
+7    ctx-lh-inferiorparietal
+8    ctx-lh-inferiortemporal
+9    ctx-lh-isthmuscingulate
+10    ctx-lh-lateraloccipital
+11    ctx-lh-lateralorbitofrontal
+12    ctx-lh-lingual
+13    ctx-lh-medialorbitofrontal
+14    ctx-lh-middletemporal
+15    ctx-lh-parahippocampal
+16    ctx-lh-paracentral
+17    ctx-lh-parsopercularis
+18    ctx-lh-parsorbitalis
+19    ctx-lh-parstriangularis
+20    ctx-lh-pericalcarine
+21    ctx-lh-postcentral
+22    ctx-lh-posteriorcingulate
+23    ctx-lh-precentral
+24    ctx-lh-precuneus
+25    ctx-lh-rostralanteriorcingulate
+26    ctx-lh-rostralmiddlefrontal
+27    ctx-lh-superiorfrontal
+28    ctx-lh-superiorparietal
+29    ctx-lh-superiortemporal
+30    ctx-lh-supramarginal
+31    ctx-lh-frontalpole
+32    ctx-lh-temporalpole
+33    ctx-lh-transversetemporal
+34    ctx-lh-insula
+35    Left-Thalamus-Proper
+36    Left-Caudate
+37    Left-Putamen
+38    Left-Pallidum
+39    Left-Hippocampus
+40    Left-Amygdala
+41    Left-Accumbens-area
+42    ctx-rh-bankssts
+43    ctx-rh-caudalanteriorcingulate
+44    ctx-rh-caudalmiddlefrontal
+45    ctx-rh-cuneus
+46    ctx-rh-entorhinal
+47    ctx-rh-fusiform
+48    ctx-rh-inferiorparietal
+49    ctx-rh-inferiortemporal
+50    ctx-rh-isthmuscingulate
+51    ctx-rh-lateraloccipital
+52    ctx-rh-lateralorbitofrontal
+53    ctx-rh-lingual
+54    ctx-rh-medialorbitofrontal
+55    ctx-rh-middletemporal
+56    ctx-rh-parahippocampal
+57    ctx-rh-paracentral
+58    ctx-rh-parsopercularis
+59    ctx-rh-parsorbitalis
+60    ctx-rh-parstriangularis
+61    ctx-rh-pericalcarine
+62    ctx-rh-postcentral
+63    ctx-rh-posteriorcingulate
+64    ctx-rh-precentral
+65    ctx-rh-precuneus
+66    ctx-rh-rostralanteriorcingulate
+67    ctx-rh-rostralmiddlefrontal
+68    ctx-rh-superiorfrontal
+69    ctx-rh-superiorparietal
+70    ctx-rh-superiortemporal
+71    ctx-rh-supramarginal
+72    ctx-rh-frontalpole
+73    ctx-rh-temporalpole
+74    ctx-rh-transversetemporal
+75    ctx-rh-insula
+76    Right-Thalamus-Proper
+77    Right-Caudate
+78    Right-Putamen
+79    Right-Pallidum
+80    Right-Hippocampus
+81    Right-Amygdala
+82    Right-Accumbens-area
+%------------------------------------------------------------------------------
+Region labels for HCP parcellation can be found in Glasser et al. 2016 (doi:  10.1038/nature18933), Neuroanatomical Supplementary Results.
