@@ -8,7 +8,6 @@ probeSelection = options.probeSelections;
 parcellation = options.parcellations;
 distanceThreshold = options.distanceThreshold;
 correctDistance = options.correctDistance;
-resolution = options.resolution;
 calculateDS = options.calculateDS;
 percentDS = options.percentDS;
 distanceCorrection = options.distanceCorrection;
@@ -65,7 +64,7 @@ for p=probeSelection
         RightCortex = 266:515;
         RightSubcortex = 516:530;
         
-   elseif strcmp(parcellation, 'HCP') || strcmp(parcellation, 'HCPmni')
+    elseif strcmp(parcellation, 'HCP') || strcmp(parcellation, 'HCPmni')
         numNodes = 360;
         LeftCortex = 1:180;
         RightCortex = 181:360;
@@ -98,12 +97,13 @@ for p=probeSelection
     cd ('data/genes/processedData');
     load(sprintf('%s%s%s%dDistThresh%d.mat', startFileName, p{1}, QClabel, numNodes, distanceThreshold));
     
+    numSubj = length(subjects);
     
-    expressionSubjROI = cell(6,1);
-    coordinatesSubjROI = cell(6,1);
-    coordSample = cell(6,1);
-    expSampNorm = cell(6,1);
-    expSample = cell(6,1);
+    expressionSubjROI = cell(numSubj,1);
+    coordinatesSubjROI = cell(numSubj,1);
+    coordSample = cell(numSubj,1);
+    expSampNorm = cell(numSubj,1);
+    expSample = cell(numSubj,1);
     entrezIDs = probeInformation.EntrezID;
     %----------------------------------------------------------------------------------
     % Normalise data for each subject separately
@@ -249,16 +249,27 @@ for p=probeSelection
         expSampNorm{subj}(:,removeGenes+1) = [];
     end
     
-    expSampNormalisedAll = vertcat(expSampNorm{1}, expSampNorm{2},expSampNorm{3},expSampNorm{4},expSampNorm{5},expSampNorm{6});
-    combinedCoord = cat(1,coordSample{1}, coordSample{2}, coordSample{3},...
-        coordSample{4}, coordSample{5}, coordSample{6});
+    numSubjects = max(subjects);
     
-    ROIind{1} = [expSampNorm{1,1}(:,1), ones(length(expSampNorm{1,1}(:,1)),1)];
-    ROIind{2} = [expSampNorm{2,1}(:,1), ones(length(expSampNorm{2,1}(:,1)),1)*2];
-    ROIind{3} = [expSampNorm{3,1}(:,1), ones(length(expSampNorm{3,1}(:,1)),1)*3];
-    ROIind{4} = [expSampNorm{4,1}(:,1), ones(length(expSampNorm{4,1}(:,1)),1)*4];
-    ROIind{5} = [expSampNorm{5,1}(:,1), ones(length(expSampNorm{5,1}(:,1)),1)*5];
-    ROIind{6} = [expSampNorm{6,1}(:,1), ones(length(expSampNorm{6,1}(:,1)),1)*6];
+    if numSubjects==6
+        expSampNormalisedAll = vertcat(expSampNorm{1}, expSampNorm{2},expSampNorm{3},expSampNorm{4},expSampNorm{5},expSampNorm{6});
+        combinedCoord = cat(1,coordSample{1}, coordSample{2}, coordSample{3},...
+            coordSample{4}, coordSample{5}, coordSample{6});
+        
+        ROIind{1} = [expSampNorm{1,1}(:,1), ones(length(expSampNorm{1,1}(:,1)),1)];
+        ROIind{2} = [expSampNorm{2,1}(:,1), ones(length(expSampNorm{2,1}(:,1)),1)*2];
+        ROIind{3} = [expSampNorm{3,1}(:,1), ones(length(expSampNorm{3,1}(:,1)),1)*3];
+        ROIind{4} = [expSampNorm{4,1}(:,1), ones(length(expSampNorm{4,1}(:,1)),1)*4];
+        ROIind{5} = [expSampNorm{5,1}(:,1), ones(length(expSampNorm{5,1}(:,1)),1)*5];
+        ROIind{6} = [expSampNorm{6,1}(:,1), ones(length(expSampNorm{6,1}(:,1)),1)*6];
+    elseif numSubjects==2
+        expSampNormalisedAll = vertcat(expSampNorm{1}, expSampNorm{2});
+        combinedCoord = cat(1,coordSample{1}, coordSample{2});
+        
+        ROIind{1} = [expSampNorm{1,1}(:,1), ones(length(expSampNorm{1,1}(:,1)),1)];
+        ROIind{2} = [expSampNorm{2,1}(:,1), ones(length(expSampNorm{2,1}(:,1)),1)*2];
+    end
+    
     
     if calculateDS
         
@@ -266,7 +277,7 @@ for p=probeSelection
         % Pre-define variables for DS calculation
         %----------------------------------------------------------------------------------
         
-        numSubjects = max(subjects);
+        
         inter = cell(numSubjects,numSubjects);
         indexj = cell(numSubjects,numSubjects);
         indexk = cell(numSubjects,numSubjects);
@@ -282,7 +293,12 @@ for p=probeSelection
         for o=1:numSubjects
             R{:,o} = expressionSubjROI{o}(:,2);
         end
-        intersectROIs = mintersect(R{1}, R{2}, R{3}, R{4}, R{5}, R{6});
+        if numSubjects==6
+            intersectROIs = mintersect(R{1}, R{2}, R{3}, R{4}, R{5}, R{6});
+        elseif numSubjects==2
+            intersectROIs = mintersect(R{1}, R{2});
+        end
+        
         
         % use a set list of ROIS that are present in all subjects
         ROIsindex = zeros(length(intersectROIs),numSubjects);
@@ -399,13 +415,11 @@ for p=probeSelection
         end
         
         fprintf(sprintf('%s distance correction is chosen\n', distanceCorrection))
-        W = unique(expSampNormalisedAll(:,1));
+        
         ROIs = expSampNormalisedAll(:,1);
         
-        [averageCoexpression, parcelCoexpression, ...
-            correctedCoexpression, Residuals, ...
-            distExpVect, averageDistance, ...
-            c, parcelExpression] = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, W, ROIs, nROIs, Fit, correctDistance, resolution, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean);
+        [averageCoexpression, parcelCoexpression,correctedCoexpression, Residuals, distExpVect, averageDistance,c, parcelExpression] ...
+            = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, ROIs, nROIs, Fit, correctDistance, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean);
         
         probeInformation.DS = DS';
     end
@@ -418,12 +432,12 @@ for p=probeSelection
     probeInformation.ProbeName(removeGenes) = [];
     
     % add ROI numbers for each row
-    parcelExpression = [W, parcelExpression];
+    parcelExpression = [nROIs', parcelExpression];
     if correctDistance
-        save(sprintf('%dDS%d%s%s%s%s%d%s_%s_distCorr%s.mat', percentDS, numNodes, normMethod, normHow, p{1}, QClabel,  doNormalise, normaliseWhat, resolution, distanceCorrection), 'SampleCoordinates', 'SampleGeneExpression', 'probeInformation', 'optionsSave', 'averageCoexpression', 'averageDistance', 'parcelExpression');
+        save(sprintf('%dDS%d%s%s%s%s%d%s_ROI_distCorr%s.mat', percentDS, numNodes, normMethod, normHow, p{1}, QClabel, doNormalise, normaliseWhat, distanceCorrection), 'SampleCoordinates', 'SampleGeneExpression', 'probeInformation', 'optionsSave', 'averageCoexpression', 'averageDistance', 'parcelExpression');
         
     elseif ~correctDistance
-        save(sprintf('%dDS%d%s%s%s%s%d%s_%s_NOdistCorr%s.mat', percentDS, numNodes, normMethod, normHow, p{1}, QClabel, doNormalise, normaliseWhat, resolution, distanceCorrection), 'SampleCoordinates', 'SampleGeneExpression', 'probeInformation', 'optionsSave', 'averageCoexpression', 'averageDistance', 'parcelExpression');
+        save(sprintf('%dDS%d%s%s%s%s%d%s_ROI_NOdistCorr%s.mat', percentDS, numNodes, normMethod, normHow, p{1}, QClabel, doNormalise, normaliseWhat, distanceCorrection), 'SampleCoordinates', 'SampleGeneExpression', 'probeInformation', 'optionsSave', 'averageCoexpression', 'averageDistance', 'parcelExpression');
         
     end
     
