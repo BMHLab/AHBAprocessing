@@ -178,12 +178,6 @@ options.doNormalise = true;
 true: normalise gene expression (each subject separately)
 false: do not normalise gene expression
 %------------------------------------------------------------------------------
-options.resolution = 'ROI';
-'ROI': expression measures are first averaged into ROIs and then CGE is
-calculated
-'sample': CGE is calculated at the resolution of samples and then CGE
-values are averaged to corresponding pairs of ROIs
-%------------------------------------------------------------------------------
 options.saveOutput = true;
 %------------------------------------------------------------------------------
 options.normaliseWithinSample = false;

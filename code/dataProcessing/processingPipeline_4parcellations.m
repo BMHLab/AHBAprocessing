@@ -32,7 +32,6 @@ options.normaliseWhat = 'Lcortex';% what part of the brain is normalised
 options.normMethod = 'scaledRobustSigmoid'; % what type of normalisation method used
 options.percentDS =  100;
 options.doNormalise = true;
-options.resolution = 'ROI';
 options.normaliseWithinSample = true;
 options.xrange = [0 200];
 options.plotCGE = false;
