@@ -312,10 +312,9 @@ for subject=1:6
         expressionAll{subject} = Expression';
         
     elseif strcmp(probeSelections, 'Mean')
-        
-        % exclude NaN probes keeping 1 probe for 1 entrezID.
+
         fprintf(1,'Combining and saving the data for subject %u\n', subject)
-        expressionAll{subject} = expressionSelected{subject}; % exclude genes that had duplicated and non-matching names
+        expressionAll{subject} = expressionSelected{subject};
     end
     % combine sample information variables to a structure.
     SampleInformation.StructureNames = DataTable.StructureName{subject,1};
