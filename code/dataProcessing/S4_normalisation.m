@@ -419,7 +419,7 @@ for p=probeSelection
         ROIs = expSampNormalisedAll(:,1);
         
         [averageCoexpression, parcelCoexpression,correctedCoexpression, Residuals, distExpVect, averageDistance,c, parcelExpression] ...
-            = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, ROIs, nROIs, Fit, correctDistance, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean);
+            = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, ROIs, nROIs, Fit, correctDistance, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean, percentDS);
         
         probeInformation.DS = DS';
     end

@@ -1,4 +1,4 @@
-function [expPlot, parcelCoexpression, correctedCoexpression, Residuals, distExpVect, parcelDistances, c, parcelExpression] = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, ROIs,nROIs, Fit, correctDistance, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean)
+function [expPlot, parcelCoexpression, correctedCoexpression, Residuals, distExpVect, parcelDistances, c, parcelExpression] = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, ROIs,nROIs, Fit, correctDistance, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean, percentDS)
 
 if nargin<9
     doPlotCGE = false;
@@ -16,7 +16,7 @@ elseif length(ROIind)==2
     subjIND = vertcat(ROIind{1}(:,2), ROIind{2}(:,2));
 end
 
-selectedGenesN = selectedGenes(:,DSvalues(:,1)); % take genes with highest DS values
+selectedGenesN = selectedGenes;
 parcelExpression = zeros(length(nROIs), size(selectedGenesN,2));
 
 if strcmp(how2mean, 'meanSamples')
@@ -75,7 +75,13 @@ for sub=1:length(nROIs)
     end
 end
 
-parcelCoexpression = corr(parcelExpression', 'type', 'Spearman'); % calculate sample-sample coexpression
+% select DS genes for CGE calculation - all other data is the same
+if percentDS<100
+selectedGenesParc = parcelExpression(:,DSvalues(:,1)); % take genes with highest DS values
+else
+selectedGenesParc = parcelExpression;
+end
+parcelCoexpression = corr(selectedGenesParc', 'type', 'Spearman'); % calculate sample-sample coexpression
 parcelCoexpression(logical(eye(size(parcelCoexpression)))) = NaN; % replace diagonal with NaN
 
 distExpVect(:,1) = parcelDistances(:);
