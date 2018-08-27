@@ -67,9 +67,7 @@ indKeepProbes = find(signalLevel>=signalThreshold);
 ProbeName = DataTableProbe.ProbeName{1,1}(indKeepProbes);
 ProbeID = ProbeID(indKeepProbes);
 EntrezID = DataTableProbe.EntrezID{1,1}(indKeepProbes);
-%GeneID = DataTableProbe.GeneID{1,1}(indKeepProbes);
 GeneSymbol = DataTableProbe.GeneSymbol{1,1}(indKeepProbes);
-%GeneName = DataTableProbe.GeneName{1,1}(indKeepProbes);
 
 probeInformationALL.ProbeName = ProbeName;
 probeInformationALL.ProbeID = ProbeID;
@@ -228,7 +226,7 @@ for subj = 1:nSub
                     || strcmp(probeSelections, 'maxCorrelation_intensity') || strcmp(probeSelections, 'PC') ...
                     || strcmp(probeSelections, 'LessNoise') || strcmp(probeSelections, 'maxIntensity') ...
                     || strcmp(probeSelections, 'RNAseq') || strcmp(probeSelections, 'CV'))
-                %indMsubj(k,subj) = indProbe(k); %(indMaxV);
+               
                 %if NaN, use NaN;
                 if isnan(indMaxV)
                     indMsubj(k,subj) = NaN;
@@ -277,9 +275,7 @@ end
 % of selected probes (1...n) from Unique.
 EntrezID = EntrezID(reorder_ind);
 ProbeID = ProbeID(reorder_ind);
-%GeneID = GeneID(reorder_ind);
 GeneSymbol = GeneSymbol(reorder_ind);
-%GeneName = GeneName(reorder_ind);
 ProbeName = ProbeName(reorder_ind);
 
 [a,ind2rem] = setdiff(ProbeID, ProbeList(:,1));
@@ -287,24 +283,16 @@ ProbeID(ind2rem) = NaN;
 EntrezID(ind2rem) = NaN;
 
 EntrezID(isnan(EntrezID)) = [];
-%GeneID(isnan(ProbeID)) = [];
 GeneSymbol(isnan(ProbeID)) = [];
-%GeneName(isnan(ProbeID)) = [];
 ProbeName(isnan(ProbeID)) = [];
 
 
-excludeGenes = []; %unique(cell2mat(toExclude));
-% make a vector if indexes for genes to keep
-keepGenes = setdiff(1:size(GeneSymbol,1), excludeGenes, 'stable');% changed from stable
-
-probeInformation.EntrezID = EntrezID(keepGenes); %[reordered, reorder_ind] = sort(probeInformation.EntrezID);
-%probeInformation.GeneID = GeneID(keepGenes);
-probeInformation.GeneSymbol = GeneSymbol(keepGenes);
-%probeInformation.GeneName = GeneName(keepGenes);
-probeInformation.ProbeName = ProbeName(keepGenes);
+probeInformation.EntrezID = EntrezID; %[reordered, reorder_ind] = sort(probeInformation.EntrezID);
+probeInformation.GeneSymbol = GeneSymbol;
+probeInformation.ProbeName = ProbeName;
 ProbeID2nd = ProbeID; % assign probe ID values to a variable (will be used to filter gene expression values)
 ProbeID(isnan(ProbeID)) = []; % remove redundant probes
-probeInformation.ProbeID = ProbeID(keepGenes);
+probeInformation.ProbeID = ProbeID;
 
 cd ..
 cd ('processedData')
@@ -321,14 +309,13 @@ for subject=1:6
         Expression = DataTable.Expression{subject,1}(indKeepProbes,:); % filter noisy probes
         Expression = Expression(reorder_ind,:); % reorder probes according to sorted entrezIDs
         Expression(isnan(ProbeID2nd),:) = []; % exclude probes that were not selected
-        Expression = Expression(keepGenes,:); % exclude genes that had duplicated and non-matching names
         expressionAll{subject} = Expression';
         
     elseif strcmp(probeSelections, 'Mean')
         
         % exclude NaN probes keeping 1 probe for 1 entrezID.
         fprintf(1,'Combining and saving the data for subject %u\n', subject)
-        expressionAll{subject} = expressionSelected{subject}(:,keepGenes); % exclude genes that had duplicated and non-matching names
+        expressionAll{subject} = expressionSelected{subject}; % exclude genes that had duplicated and non-matching names
     end
     % combine sample information variables to a structure.
     SampleInformation.StructureNames = DataTable.StructureName{subject,1};
