@@ -5,6 +5,9 @@ This repository provides Matlab code for reproducing a range of analyses involvi
 Please read our paper, and if you use this code, please cite our paper:
 A. Arnatkeviciute, B.D. Fulcher, A. Fornito. A practical guide to linking brain-wide gene expression and neuroimaging data.
 
+NOTE: The code has been updated on the 28th August 2018 - in the previous version gene ordering in the ROI x gene matrices did not correspond to the gene information provided in the probeInformation structure.
+Now this issue is fixed. If you processed the data before this date, please re-process it using the updated code. 
+
 Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 ### Dependencies:
