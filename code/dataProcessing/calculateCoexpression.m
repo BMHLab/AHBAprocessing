@@ -59,6 +59,7 @@ elseif strcmp(how2mean, 'meanSubjects')
     
 end
 
+sampleDistances(logical(eye(size(sampleDistances)))) = NaN; % replace diagonal with NaN
 [sROIs, ind] = sort(ROIs);
 distancesSorted = sampleDistances(ind, ind);
 parcelDistances = zeros(length(nROIs),length(nROIs));
@@ -86,7 +87,6 @@ parcelCoexpression(logical(eye(size(parcelCoexpression)))) = NaN; % replace diag
 
 distExpVect(:,1) = parcelDistances(:);
 distExpVect(:,2) = parcelCoexpression(:);
-
 
 Dvect = distExpVect(:,1);
 Rvect = distExpVect(:,2);
