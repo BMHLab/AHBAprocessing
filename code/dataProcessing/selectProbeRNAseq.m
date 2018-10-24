@@ -53,8 +53,8 @@ for subject=1:2
         indMIC = find(microarrayGene==uniqueGenes(g));
         % for each probe found in microarray correlate it with RNAseq
         if isempty(indRNA)
-            correlations{g,subject} = NaN;
-            pvalues{g,subject} = NaN;
+            correlations{g,subject} = nan(length(indMIC),1); 
+            pvalues{g,subject} = nan(length(indMIC),1); 
         else
             C = zeros(length(indMIC),1);
             Pvals = zeros(length(indMIC),1);
