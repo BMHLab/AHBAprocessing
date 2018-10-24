@@ -8,18 +8,26 @@ useCUSTprobes = options.useCUSTprobes;
 probeSelections = options.probeSelections{1};
 signalThreshold = options.signalThreshold;
 saveOutput = options.saveOutput;
+VARscale = options.VARscale; 
+VARperc = options.VARperc;
+VARfilter = options.VARfilter;
 
 if strcmp(probeSelections, 'RNAseq')
     RNAseqThreshold = options.RNAseqThreshold;
     RNAsign = options.RNAsignThreshold; 
 end
 
-if signalThreshold==-1
-    QClabel = 'noQC'; 
-else
+if signalThreshold==-1 && VARfilter
+    QClabel = sprintf('noQCvar%s', VARscale); 
+elseif signalThreshold==-1 && ~VARfilter
+    QClabel = 'noQC';
+elseif signalThreshold>-1 && ~VARfilter
     QClabel = 'QC'; 
+elseif signalThreshold>-1 && VARfilter
+    QClabel = sprintf('QCvar%s', VARscale);
 end
 
+optionsSave=options; 
 %------------------------------------------------------------------------------
 % Load the data
 %------------------------------------------------------------------------------
@@ -61,6 +69,13 @@ ProbeID = DataTableProbe.ProbeID{1,1};
 
 signalLevel = sum(noiseall,2)./size(noiseall,2);
 indKeepProbes = find(signalLevel>=signalThreshold);
+signalLevelALL = signalLevel; 
+
+if VARfilter
+INDkeepVAR = filterVariance(DataTable, VARscale, VARperc); 
+% keep probes that pass both filtering
+indKeepProbes = intersect(indKeepProbes, INDkeepVAR); 
+end
 
 % remove selected probes from data and perform other calculations only on
 % non-noisy probes
@@ -68,11 +83,14 @@ ProbeName = DataTableProbe.ProbeName{1,1}(indKeepProbes);
 ProbeID = ProbeID(indKeepProbes);
 EntrezID = DataTableProbe.EntrezID{1,1}(indKeepProbes);
 GeneSymbol = DataTableProbe.GeneSymbol{1,1}(indKeepProbes);
+signalLevelALL = signalLevelALL(indKeepProbes);
 
-probeInformationALL.ProbeName = ProbeName;
-probeInformationALL.ProbeID = ProbeID;
-probeInformationALL.EntrezID = EntrezID;
-probeInformationALL.GeneSymbol = GeneSymbol;
+[~, sortALL] = sort(EntrezID);
+probeInformationALL.ProbeName = ProbeName(sortALL);
+probeInformationALL.ProbeID = ProbeID(sortALL);
+probeInformationALL.EntrezID = EntrezID(sortALL);
+probeInformationALL.GeneSymbol = GeneSymbol(sortALL);
+probeInformationALL.signalProp = signalLevelALL(sortALL);
 
 
 % if choosing probes based on RNAseq, then use data only from 1 subject
@@ -318,12 +336,14 @@ for subject=1:6
     end
     % combine sample information variables to a structure.
     SampleInformation.StructureNames = DataTable.StructureName{subject,1};
+    SampleInformation.StructureID = DataTable.SampleID{subject,1};
     SampleInformation.MMCoordinates = DataTable.MMcoordinates{subject,1};
     SampleInformation.MRIvoxCoordinates = DataTable.MRIvoxCoordinates{subject,1};
     sampleInfo{subject} = SampleInformation;
     
 end
 
+options = optionsSave; 
 if saveOutput
     if strcmp(probeSelections, 'RNAseq')
         
