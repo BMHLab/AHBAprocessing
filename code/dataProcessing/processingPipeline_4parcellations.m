@@ -15,6 +15,9 @@ options.probeSelections = {'RNAseq'};
 options.signalThreshold = 0.5;
 options.RNAseqThreshold = 0.2;
 options.RNAsignThreshold = false;
+options.VARfilter = false; 
+options.VARscale = 'normal';
+options.VARperc = 50;
 options.saveOutput = true;
 
 S1_extractData(options)
@@ -27,6 +30,9 @@ S2_probes(options)
 options.correctDistance = false;
 options.calculateDS = true;
 options.distanceCorrection = 'Euclidean';
+options.distanceThreshold = 2;
+options.divideSamples = 'listCortex';
+options.excludeHippocampus = false;
 options.Fit = {'exp'};
 options.normaliseWhat = 'Lcortex';% what part of the brain is normalised
 options.normMethod = 'scaledRobustSigmoid'; % what type of normalisation method used
@@ -43,12 +49,6 @@ options.meanSamples = 'meanSamples'; %'meanSamples'; meanSubjects
 %------------------------------------------------------------------------------
 
 options.parcellations = {'aparcaseg'};
-% for each parcellation first run with options.distanceThreshold = 40 to
-% evaluate all distances between all assigned samples
-options.distanceThreshold = 40;
-S3_samples2parcellation(options)
-% then use the appropriate threshold
-options.distanceThreshold = 2;
 S3_samples2parcellation(options)
 c = S4_normalisation(options)
 
@@ -57,9 +57,6 @@ c = S4_normalisation(options)
 %------------------------------------------------------------------------------
 
 options.parcellations = {'cust100'};
-options.distanceThreshold = 40;
-S3_samples2parcellation(options)
-options.distanceThreshold = 2;
 S3_samples2parcellation(options)
 c = S4_normalisation(options)
 
@@ -67,9 +64,6 @@ c = S4_normalisation(options)
 % 180 ROIs per hemisphere parcellation
 %------------------------------------------------------------------------------
 options.parcellations = {'HCP'};
-options.distanceThreshold = 40;
-S3_samples2parcellation(options)
-options.distanceThreshold = 2;
 S3_samples2parcellation(options)
 c = S4_normalisation(options)
 
@@ -77,8 +71,5 @@ c = S4_normalisation(options)
 % 250 ROIs per hemisphere parcellation
 %------------------------------------------------------------------------------
 options.parcellations = {'cust250'};
-options.distanceThreshold = 40;
-S3_samples2parcellation(options)
-options.distanceThreshold = 2;
 S3_samples2parcellation(options)
 c = S4_normalisation(options)

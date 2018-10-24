@@ -1,4 +1,4 @@
-function [expPlot, parcelCoexpression, correctedCoexpression, Residuals, distExpVect, parcelDistances, c, parcelExpression] = calculateCoexpression(sampleDistances, selectedGenes, DSvalues, ROIs,nROIs, Fit, correctDistance, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean, percentDS)
+function [expPlot, parcelCoexpression, correctedCoexpression, Residuals, distExpVect, c, parcelExpression] = calculateCoexpression(distRegions, selectedGenes, DSvalues, ROIs,nROIs, Fit, correctDistance, xrange, doPlotCGE, doPlotResiduals, ROIind, how2mean, percentDS)
 
 if nargin<9
     doPlotCGE = false;
@@ -47,33 +47,15 @@ elseif strcmp(how2mean, 'meanSubjects')
             
             if length(find(A))>1
                 parcelExpressionSubj(subj,samp,:) = nanmean(selectedGenesN(A==1,:));
-            elseif isempty(find(A, 1))
-                parcelExpressionSubj(subj,samp,:) = NaN;
-            else
+            elseif length(find(A))==1
                 parcelExpressionSubj(subj,samp,:) = selectedGenesN(A==1,:);
+            else
+                parcelExpressionSubj(subj,samp,:) = NaN;
             end
             
         end
     end
     parcelExpression = squeeze(nanmean(parcelExpressionSubj,1));
-    
-end
-
-sampleDistances(logical(eye(size(sampleDistances)))) = NaN; % replace diagonal with NaN
-[sROIs, ind] = sort(ROIs);
-distancesSorted = sampleDistances(ind, ind);
-parcelDistances = zeros(length(nROIs),length(nROIs));
-
-for sub=1:length(nROIs)
-    for j=1:length(nROIs)
-        
-        A = sROIs == nROIs(sub);
-        isSubject = sROIs == nROIs(j);
-        
-        D = distancesSorted(A,isSubject);
-        parcelDistances(sub,j) = nanmean(D(:));
-        
-    end
 end
 
 % select DS genes for CGE calculation - all other data is the same
@@ -85,7 +67,7 @@ end
 parcelCoexpression = corr(selectedGenesParc', 'type', 'Spearman'); % calculate sample-sample coexpression
 parcelCoexpression(logical(eye(size(parcelCoexpression)))) = NaN; % replace diagonal with NaN
 
-distExpVect(:,1) = parcelDistances(:);
+distExpVect(:,1) = distRegions(:);
 distExpVect(:,2) = parcelCoexpression(:);
 
 Dvect = distExpVect(:,1);
@@ -155,7 +137,7 @@ else
     end
 end
 
-numSamples = size(parcelDistances,1);
+numSamples = size(distRegions,1);
 correctedCoexpression = reshape(Residuals,[numSamples, numSamples]);
 
 %----------------------------------------------------------------------------------
