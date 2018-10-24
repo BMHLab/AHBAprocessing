@@ -9,7 +9,7 @@ options.ExcludeCBandBS = true;
 options.useCUSTprobes = true;
 options.updateProbes = 'reannotator';
 fprintf('Generating the initial data\n')
-%S1_extractData(options)
+S1_extractData(options)
 
 % % ------------------------------------------------------------------------------
 % Reproducing the figures
