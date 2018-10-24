@@ -15,7 +15,7 @@ Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu
 [Toolbox Fast Marching](https://au.mathworks.com/matlabcentral/fileexchange/6110-toolbox-fast-marching), Version 1.2.0.0
 
 ### Data files
-Data files required for this project are hosted on [this figshare repository](https://figshare.com/s/441295fe494375aa0c13).
+Data files required for this project are hosted on [this figshare repository](https://doi.org/10.6084/m9.figshare.6852911).
 Please create a directory called `data` in the root directory and download data there.
 
 ### Data processing
@@ -34,7 +34,7 @@ To generate data for all four parcellations using selected options use `processi
 Figures in our paper can be regenerated using `makeFigures.m` in the `plotting` folder. All scripts should be run from the root directory. Other relevant analysis scripts are in `dataProcessing`.
 
 ### Example usage:
-After downloading [data from figshare](https://figshare.com/s/441295fe494375aa0c13) to the `data` directory,
+After downloading [data from figshare](https://doi.org/10.6084/m9.figshare.6852911) to the `data` directory,
 ```matlab
     % Add paths required for the project:
     AddPaths
