@@ -78,7 +78,7 @@ available, probe with the higher variance is selected.
 Binary indication of expression values exceeding the background are
 determined by AHBA.
 
-'Mean': mean of all availabel probes for a gene is calculated.
+'Mean': mean of all available probes for a gene is calculated.
 
 'Random': a probe is selected at random.
 
@@ -96,6 +96,25 @@ distance threshold imposed when assigning samples to regions of the parcellation
 options.signalThreshold = 0.5;
 the proportion of samples with expression values exceeding the
 background.
+%------------------------------------------------------------------------------
+options.divideSamples = 'listCortex';
+'ontology' - samples are separated into cortical and subcortical based on AHBA ontology information
+'listCortex' - samples are separated into cortical and subcortical based on re-defined list of region names;
+%------------------------------------------------------------------------------
+options.excludeHippocampus = false;
+false - hippocampal samples are not excluded from sample assignment;
+true - hippocampal samples are excluded from sample assignment;
+%------------------------------------------------------------------------------
+These options correspond to variance-based filtering
+options.VARfilter = false;
+false - variance based filtering is not performed; if this option is selected, other options such as options.VARscale and options.VARperc are not considered.
+true - variance based filtering is performed;
+options.VARscale = 'normal';
+'normal' - variance based filtering performed on non-log2 transformed data (gives better outcomes)
+'log2' - variance based filtering performed on log2 transformed data (gives worse outcomes)
+options.VARperc = 50;
+The percentage of lowest variance probes considered for filtering.
+The probe is excluded if it is classified as low variance in all 6 subjects.
 %------------------------------------------------------------------------------
 options.RNAseqThreshold = 0.2;
 the minimal correlation between microarray and RNA-seq expression
@@ -116,22 +135,19 @@ true: evaluate the differential stability for each gene
 false: do not evaluate the differential stability for each gene
 %------------------------------------------------------------------------------
 options.distanceCorrection = 'Euclidean';
-'Surface': distances between samples are evaluated on the
-corticalsurface. Values are pre-computed for aparcaseg (34 nodes per
-hemisphere) parcellation. Calculating distances on surface required
-additional software.
+'Euclidean': distances between samples are evaluated as straight lines
+using Euclidean distances between sample coordinates. Can be performed on
+all parcellations including cortical and subcortical regions.
+
+'Surface': distances between samples are evaluated on the cortical surface.
+In a current configuration can be performed when evaluating expression only within left cortex. 
 
 'GMvolume': distances between samples are evaluated within the cortical
 grey matter volume. Values are pre-computed for aparcaseg (34 nodes per
 hemisphere) parcellation. Calculation requires time.
 
-'Euclidean': distances between samples are evaluated as straight lines
-using Euclidean distances between sample coordinates. Can be performed on
-all parcellations including cortical and subcortical regions.
-
-'SurfaceANDEuclidean': distances between cortical samples are evaluated
-on the cortical surface for aparcaseg (34 nodes perhemisphere) parcellation.
-Distances between subcortical regions as well as between cortical and
+'SurfaceANDEuclidean': distances between cortical regions are evaluated
+on the cortical surface. Distances between subcortical regions as well as between cortical and
 subcortical regions evaluated as straight lines using Euclidean distance.
 %------------------------------------------------------------------------------
 options.Fit = {'exp'};
@@ -147,13 +163,13 @@ relationship: FitCurve = c.A.*exp(-c.n*Dvect);
 relationship: FitCurve = exp(-c.n*Dvect) + c.B;
 'decay': FitCurve = c.A/Dvect + c.B;
 %------------------------------------------------------------------------------
-options.normaliseWhat = 'Lcortex';what part of the brain is normalised
+options.normaliseWhat = 'Lcortex'; what part of the brain is normalised
 'Lcortex': only data from left cortex are used (1:6 subjects)
 'LcortexSubcortex': only data from left cortex and subcortex are used,
 normalised together (1:6 subjects)
 'wholeBrain': data from the whole brain are used (cortex+ subcortex both
 hemispheres), normalised together (1:2 subjects) given only 2 subjects
-have data from the right hemisphere;
+have data from the right hemisphere; this options is not suitable for HCP parcellation as it doesn't include subcortical regions.
 'LRcortex': data from the whole brain are used (cortex both
 hemispheres), normalised together (1:2 subjects) given only 2 subjects
 have data from the right hemisphere;
@@ -162,14 +178,14 @@ normalised separately (1:6 subjects)
 %------------------------------------------------------------------------------
 options.normMethod = 'scaledRobustSigmoid'; what type of normalisation method used
 'subtractMean'Subtract the mean:
-'maxmin' Linear rescaling to the unit interval
-'zscore'
-'robustSigmoid'A outlier-robust sigmoid
-'scaledRobustSigmoid' A scaled, outlier-robust sigmoid
-'sigmoid' Standard sigmoidal transformation
-'scaledSigmoid' Standard sigmoid transform, then a rescaling to the unit interval
-'mixedSigmoid' Uses a scaled sigmoid if iqr=0; a scaled, outlier-robust sigmoid otherwise; Uses only non-NaN; Outlier-adjusted sigmoid:
-'scaledsigmoid5q' First caps at 5th and 95th quantile, then does scaled sigmoid
+'maxmin' - Linear rescaling to the unit interval
+'zscore' - z-score normalisation;
+'robustSigmoid' - outlier-robust sigmoid
+'scaledRobustSigmoid' - scaled, outlier-robust sigmoid
+'sigmoid' - standard sigmoidal transformation
+'scaledSigmoid' - standard sigmoid transform, then a rescaling to the unit interval
+'mixedSigmoid' - uses a scaled sigmoid if iqr=0; a scaled, outlier-robust sigmoid otherwise; Uses only non-NaN; Outlier-adjusted sigmoid:
+'scaledsigmoid5q' - first caps at 5th and 95th quantile, then does scaled sigmoid
 %------------------------------------------------------------------------------
 options.percentDS =  100;
 the percentage of highest differential stability genes used;
@@ -188,16 +204,11 @@ gene normalisation
 options.meanSamples = 'meanSamples';
 'meanSamples' when multiple samples are available in a region, the mean of all samples is calculated to summarise the expression vector. The “weight” of every sample in that region is equal.
 ‘meanSubjects’ when multiple samples are available in a region, the average of samples for each subject is calculated first, and then the mean expression determined as an average across the brains. The “weight” of every subjects that has samples in that region is equal.
-see Figure 7 for more details.
+see Figure S7 for more details.
 %------------------------------------------------------------------------------
 
 S1_extractData(options)
 S2_probes(options)
-for each parcellation first run with options.distanceThreshold = 40;
-options.distanceThreshold = 40;
-S3_samples2parcellation(options)
-then use the appropriate threshold
-options.distanceThreshold = 2;
 S3_samples2parcellation(options)
 c = S4_normalisation(options)
 %------------------------------------------------------------------------------
