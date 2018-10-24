@@ -2,15 +2,19 @@ function figure4AC(data2use, afterQC, options, Regeneratedata)
 % make a figure for probe correlation from scratch
 %1. regenerate data for different probe selection methods
 if afterQC
-    options.signalThreshold = 0.5; % no QC filtering
+    options.signalThreshold = 0.5;
     fileName = 'QC';
+
 else
     options.signalThreshold = -1; % no QC filtering
     fileName = 'noQC';
 end
 
+options.VARfilter = false;
+options.VARscale = 'normal';
+options.VARperc = 50;
 numIterRAND = 100;
-
+saveOutput = true;
 
 switch data2use
     case 'generate data'
@@ -338,7 +342,7 @@ switch data2use
 
         save(sprintf('probeCorrelationsRAND_RNAseq%s.mat', fileName), 'RNAcorr', 'stdevRNA', 'avCorrRANDrna', 'stdCorrRANDrna');
 
-        subplot(1,2,2); 
+        subplot(1,2,2);
         set(gcf,'color','w');
         hold on
         for i = 1:length(valS)
@@ -410,7 +414,7 @@ switch data2use
         [valS, indS] = sort(RNAcorr, 'descend');
         namesS = tickNames(indS);
 
-        subplot(1,2,2); 
+        subplot(1,2,2);
         set(gcf,'color','w');
         hold on
         for i = 1:length(valS)

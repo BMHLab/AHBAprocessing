@@ -46,7 +46,6 @@ end
 sz = 60; 
 geneIND = 5127; 
 
-
 figure;set(gcf,'color','w');
 scatter(expressionZscore(:,geneIND),expressionSRS(:,geneIND),sz,C,'filled','MarkerEdgeColor',[.55 .55 .55],'LineWidth',1);
 xlabel('z-score', 'FontSize', 20); ylabel('SRS', 'FontSize', 20); 

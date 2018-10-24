@@ -4,8 +4,6 @@ function figureS1()
 
 cd ('data/genes/processedData')
 load('MicroarrayDataWITHcustProbesUpdatedXXX.mat')
-figure; set(gcf,'Position',[300 300 1000 500])
-set(gcf,'color','w');
 % calculate;
 for j=1:2
     if j==1
@@ -27,8 +25,7 @@ for j=1:2
         I(i) = mean(Expressionall(i,:));
         
     end
-    subplot(1,2,j)
-    [xThresholds,yMeans] = BF_PlotQuantiles(I,V,numBins,0,0);
+    [xThresholds,yMeans] = BF_PlotQuantiles(I,V,numBins,false,true);set(gcf,'color','w');
     xlabel('Mean probe intensity');ylabel(sprintf('Probe %s', nameLabel));
     set(gca,'FontSize', 18)
    

@@ -1,8 +1,9 @@
-function figure4B()
+function figure4B(QClabel)
 % script to evaluate correlations between RNAseq and microarray data and
 % make list for enrichment
 cd ('data/genes/processedData')
-load('MicroarrayDataWITHcustProbesUpdatedXXXRNAseqnoQC.mat')
+load(sprintf('MicroarrayDataWITHcustProbesUpdatedXXXRNAseq%s.mat', QClabel))
+    
 ind = cell2mat(cellfun(@(x)any(isnan(x)),avgCorr,'UniformOutput',false)); 
 fprintf('%d genes are overlapping between RNA-seq and microarray datasets\n', length(find(ind==0)))
 

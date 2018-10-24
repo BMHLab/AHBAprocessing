@@ -2,9 +2,9 @@ function figureS6(howTOnormalise)
 
 cd ('data/genes/processedData')
 if strcmp(howTOnormalise, 'separately')
-    load('100DS82scaledRobustSigmoidNGRNAseqQC1LcortexSubcortexSEPARATE_ROI_NOdistCorrSurfaceANDEuclidean.mat')
+    load('100DS82scaledRobustSigmoidNSGRNAseqQC1LcortexSubcortexSEPARATE_ROI_NOdistCorrSurfaceANDEuclidean.mat')
 elseif strcmp(howTOnormalise, 'together')
-    load('100DS82scaledRobustSigmoidNGRNAseqQC1LcortexSubcortex_ROI_NOdistCorrSurfaceANDEuclidean.mat')
+    load('100DS82scaledRobustSigmoidNSGRNAseqQC1LcortexSubcortex_ROI_NOdistCorrSurfaceANDEuclidean.mat')
 end
 
 
@@ -107,11 +107,11 @@ set(gca,'yticklabel',[])
 
 % plot distance relationships separately for groups on non-corrected data
 figure; scatter(distSEP{1},expSEP{1}, 100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[.64 .87 .93]);
+    'MarkerFaceColor',[.8 .8 .8]);
 hold on; scatter(distSEP{3}, expSEP{3},100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[1 .65 0]);
+    'MarkerFaceColor',[1 .8 .64]);
 hold on; scatter(distSEP{2}, expSEP{2},100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[1 .11 .18]);
+    'MarkerFaceColor',[.4 .4 .4]);
 set(gcf,'color','w');set(gca,'fontsize',18)
 %legend({'Cortex to cortex', 'Cortex to subcortex', 'Subcortex to subcortex'},'FontSize', 18);
 xlabel('Distance between regions (mm)')
@@ -123,11 +123,11 @@ title(sprintf('CGE - distance, normalised %s', howTOnormalise));
 
 % plot distance relationships separately for groups on corrected data
 figure; scatter(distSEP{1}, corrected{1}, 100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[.64 .87 .93]);
+    'MarkerFaceColor',[.8 .8 .8]);
 hold on; scatter(distSEP{3}, corrected{3},100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[1 .65 0]);
+    'MarkerFaceColor',[1 .8 .64]);
 hold on; scatter(distSEP{2}, corrected{2},100, 'MarkerEdgeColor',[.55 .55 .55],...
-    'MarkerFaceColor',[1 .11 .18]);
+    'MarkerFaceColor',[.4 .4 .4]);
 set(gcf,'color','w');set(gca,'fontsize',18)
 %legend({'Cortex to cortex', 'Cortex to subcortex', 'Subcortex to subcortex'},'FontSize', 18);
 xlabel('Distance between regions (mm)')
