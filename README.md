@@ -53,6 +53,8 @@ To install the toolbox run the following lines within matlab from the `code/peri
     % install the toolbox_fast_marching
     mex -setup
     compile_mex
+    % return to the root directory
+    cd ../../..
     % Generate ALL figures:
     makeFigures
     % Run all data processing scripts from scratch (with default options):
