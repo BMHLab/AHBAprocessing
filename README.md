@@ -52,7 +52,7 @@ To install the toolbox run the following lines within matlab from the `code/peri
     cd code/peripheralFunctions/toolbox_fast_marching
     % install the toolbox_fast_marching
     mex -setup
-    compile_mex
+    compile_mex;
     % return to the root directory
     cd ../../..
     % Generate ALL figures:
