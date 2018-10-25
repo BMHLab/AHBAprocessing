@@ -7,9 +7,18 @@ General comments
 	- Re-annotator (software: https://sourceforge.net/projects/reannotator/; article: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0139516). For more information on how to perform the re-annotation, please see README_Reannotator.txt
 	- biomart (http://asia.ensembl.org/biomart/martview/64a0f53ea90ed52bf1641929d9fe7f9f)
 	- AnnotationDbi (https://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html).
-2. Distances between samples on the cortical surface and within grey matter volume were calculated using aparcaseg parcellation (34 regions per hemisphere + 7 subcortical regions). Samples were matched to the regions of interest by generating parcellations in subject-specific spaces for every brain, therefore the number of mapped samples (after applying a selected distance threshold) onto each parcellation is slightly different. In order to use distances between samples calculated within the grey matter volume and on the cortical surface for other parcellations (HCP, cust100 or cust250), the mapping and calculations should be performed separately.
+2. Distances between samples within grey matter volume were calculated using aparcaseg 
+parcellation (34 regions per hemisphere + 7 subcortical regions). 
+Samples were matched to the regions of interest by generating parcellations 
+in subject-specific spaces for every brain, therefore the number of mapped 
+samples (after applying a selected distance threshold) onto each parcellation 
+is slightly different. In order to use distances between samples calculated 
+within the grey matter volume for other parcellations (HCP, cust100 or cust250), 
+the mapping and calculations should be performed separately.
 For more details on how this was done, please refer to:
 	- calculateDistancesGMinMNI.m, a script that contains functions to calculate distances between samples within the grey matter volume.
+3. Some combinations of options are not compatable, e.g. distances on the cortical surface can be calculated only for
+instances involving left cortex (Lcortex). 
 %------------------------------------------------------------------------------
 Comments about processingPipeline.m script
 %------------------------------------------------------------------------------
