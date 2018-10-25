@@ -38,7 +38,7 @@ To generate data for all four parcellations using selected options use `processi
 Figures in our paper can be regenerated using `makeFigures.m` in the `plotting` folder. All scripts should be run from the root directory. Other relevant analysis scripts are in `dataProcessing`.
 
 ### Example usage:
-After downloading [data from figshare](https://doi.org/10.6084/m9.figshare.6852911) to the `data` directory, add the contents of the mater directory to the path using "AddPaths" function.
+After downloading [data from figshare](https://doi.org/10.6084/m9.figshare.6852911) to the `data` directory, add the contents of the mater directory to the path using `AddPaths` function.
 
 To enable distance calculation on the cortical surface, install `toolbox_fast_marching toolbox`.
 To install the toolbox run the following lines within matlab from the `code/peripheralFunctions/toolbox_fast_marching` directory (for more information refer to [documentation](https://au.mathworks.com/matlabcentral/fileexchange/6110-toolbox-fast-marching)):
