@@ -1,6 +1,6 @@
 # AHBAprocessing
 
-This repository provides Matlab code for reproducing a range of analyses involving processing Allen Human Brain Atlas gene expression data and running a range of analyses to evaluate the effect of different processing choices. The code was verified using Matlab 2016b, 2017b, 2018a. 
+This repository provides Matlab code for reproducing a range of analyses involving processing Allen Human Brain Atlas gene expression data and running a range of analyses to evaluate the effect of different processing choices. The code was verified using Matlab 2016b, 2017b, 2018a.
 
 Please read our paper, and if you use this code, please cite our paper:
 A. Arnatkeviciute, B.D. Fulcher, A. Fornito. A practical guide to linking brain-wide gene expression and neuroimaging data.
@@ -60,3 +60,7 @@ To install the toolbox run the following lines within matlab from the `code/peri
     % Run all data processing scripts from scratch (with default options):
     processingPipeline
 ```
+
+### Useful links:
+A package that compares a statistical map with gene expression patterns from Allen Human Brain
+Atlas https://github.com/chrisgorgo/alleninf. 
