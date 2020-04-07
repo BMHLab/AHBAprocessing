@@ -14,10 +14,10 @@ if strcmp(parcellation, 'aparcaseg')
     [vertices, label,ctab] = read_annotation('lh.aparc.annot');
     LeftCortex = [2:4,6:36];
 elseif strcmp(parcellation, 'cust100')
-    [vertices, label,ctab] = read_annotation('lh.custom200.annot');
+    [vertices, label,ctab] = read_annotation('lh.random200.annot');
     LeftCortex = 2:101;
 elseif strcmp(parcellation, 'cust250')
-    [vertices, label,ctab] = read_annotation('lh.custom500.annot');
+    [vertices, label,ctab] = read_annotation('lh.random500.annot');
     LeftCortex = 2:251;
 elseif strcmp(parcellation, 'HCP')
     [vertices, label,ctab] = read_annotation('lh.HCP-MMP1.annot');
@@ -34,7 +34,7 @@ end
 %------------------------------------------------------------------------------
 
 vertSurf = zeros(length(LeftCortex),1);
-j=1; 
+j=1;
 for r=LeftCortex
     verts = find(label==ctab.table(r,5));
     coordROI = mean(verticesSphere(verts,:),1);
@@ -43,7 +43,7 @@ for r=LeftCortex
     k = dsearchn(verticesSphere(verts,:),coordROI);
     % select that vertex in the parcellation
     vertSurf(j) = verts(k);
-    j=j+1; 
+    j=j+1;
 end
 
 %------------------------------------------------------------------------------
