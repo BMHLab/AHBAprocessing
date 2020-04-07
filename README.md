@@ -6,6 +6,7 @@ Please read our paper, and if you use this code, please cite our paper:
 A. Arnatkeviciute, B.D. Fulcher, A. Fornito. A practical guide to linking brain-wide gene expression and neuroimaging data.
 
 NOTE: The code and corresponding data has been updated on the 7th of April 2020. We have discovered some inaccuracies in the cust100 and cust250 parcellations. New random parcellations containing 100 and 250 regions per hemisphere were generated and the corresponding data updated. If you used cust100 and cust250 parcellations, please refer to the new version of the data.
+
 NOTE: The code has been updated on the 28th August 2018 - in the previous version gene ordering in the ROI x gene matrices did not correspond to the gene information provided in the probeInformation structure.
 Now this issue is fixed. If you processed the data before this date, please re-process it using the updated code.
 
