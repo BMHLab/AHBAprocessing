@@ -22,6 +22,18 @@ elseif strcmp(parcellation, 'cust250')
 elseif strcmp(parcellation, 'HCP')
     [vertices, label,ctab] = read_annotation('lh.HCP-MMP1.annot');
     LeftCortex = 2:181;
+elseif strcmp(parcellation, 'Schaefer100')
+    [vertices, label,ctab] = read_annotation('lh.Schaefer100_7net.annot');
+    LeftCortex = 2:51;
+elseif strcmp(parcellation, 'Schaefer300')
+    [vertices, label,ctab] = read_annotation('lh.Schaefer300_7net.annot');
+    LeftCortex = 2:151;
+elseif strcmp(parcellation, 'Schaefer500')
+    [vertices, label,ctab] = read_annotation('lh.Schaefer500_7net.annot');
+    LeftCortex = 2:251;
+elseif strcmp(parcellation, 'Schaefer1000')
+    [vertices, label,ctab] = read_annotation('lh.Schaefer1000_7net.annot');
+    LeftCortex = 2:501;
 end
 
 % load sphere file
