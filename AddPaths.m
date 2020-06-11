@@ -15,3 +15,4 @@ for j = 1:length(paths)
     addpath(genpath(paths{j}))
 end
 fprintf(1,' Added.\n');
+

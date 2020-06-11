@@ -70,6 +70,22 @@ for p=probeSelection
         LeftSubcortex = 251:265;
         RightCortex = 266:515;
         RightSubcortex = 516:530;
+    elseif strcmp(parcellation, 'Schaefer100')
+        numNodes = 100;
+        LeftCortex = 1:numNodes/2;
+        RightCortex = 1:numNodes/2+1:numNodes;
+    elseif strcmp(parcellation, 'Schaefer300')
+        numNodes = 300;
+        LeftCortex = 1:numNodes/2;
+        RightCortex = 1:numNodes/2+1:numNodes;
+    elseif strcmp(parcellation, 'Schaefer500')
+        numNodes = 500;
+        LeftCortex = 1:numNodes/2;
+        RightCortex = 1:numNodes/2+1:numNodes;
+    elseif strcmp(parcellation, 'Schaefer1000')
+        numNodes = 1000;
+        LeftCortex = 1:numNodes/2;
+        RightCortex = 1:numNodes/2+1:numNodes;
         
     elseif strcmp(parcellation, 'HCP') || strcmp(parcellation, 'HCPmni')
         numNodes = 360;

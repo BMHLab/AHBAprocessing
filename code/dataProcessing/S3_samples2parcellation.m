@@ -227,17 +227,17 @@ for parcellation = parcellations
             subjectDir = sprintf('S0%d_H0351', subject);
             cd (subjectDir)
 
-            if strcmp(parcellation, 'HCP') || strcmp(parcellation, 'HCPmni')
-                brainParts = {'Cortex'};
-            else
+            if strcmp(parcellation, 'aparcaseg') || strcmp(parcellation, 'cust100') || strcmp(parcellation, 'cust250')
                 brainParts = {'Cortex','Subcortex'};
+            else
+                brainParts = {'Cortex'};
             end
             fprintf('Subject %u parcellation %s assignment distance threshold %u\n; ', subject, parcellation{1}, distanceThreshold )
 
             %------------------------------------------------------------------------------
             % Load parcellations
             %------------------------------------------------------------------------------
-            if strcmp(parcellation, 'aparcaseg')
+             if strcmp(parcellation, 'aparcaseg')
                 [~, data_parcel]=read('defaultparc_NativeAnat.nii');
                 NumNodes = 82;
                 LeftCortex = 1:34;
@@ -263,6 +263,26 @@ for parcellation = parcellations
                 NumNodes = 360;
                 LeftCortex = 1:180;
                 RightCortex = 181:360;
+            elseif strcmp(parcellation, 'Schaefer100')
+                [~, data_parcel]=read('Schaefer100_7net_config_uncorr.nii');
+                NumNodes = 100;
+                LeftCortex = 1:NumNodes/2;
+                RightCortex = 1:NumNodes/2+1:NumNodes;
+            elseif strcmp(parcellation, 'Schaefer300')
+                [~, data_parcel]=read('Schaefer300_7net_config_uncorr.nii');
+                NumNodes = 300;
+                LeftCortex = 1:NumNodes/2;
+                RightCortex = 1:NumNodes/2+1:NumNodes;
+            elseif strcmp(parcellation, 'Schaefer500')
+                [~, data_parcel]=read('Schaefer500_7net_config_uncorr.nii');
+                NumNodes = 500;
+                LeftCortex = 1:NumNodes/2;
+                RightCortex = 1:NumNodes/2+1:NumNodes;
+            elseif strcmp(parcellation, 'Schaefer1000')
+                [~, data_parcel]=read('Schaefer1000_7net_config_uncorr.nii');
+                NumNodes = 1000;
+                LeftCortex = 1:NumNodes/2;
+                RightCortex = 1:NumNodes/2+1:NumNodes;
             elseif strcmp(parcellation, 'HCPmni')
                 [~, data_parcel]=read('MMPinMNI.nii');
                 NumNodes = 360;
@@ -391,16 +411,16 @@ for parcellation = parcellations
             %------------------------------------------------------------------------------
             % Save output
             %------------------------------------------------------------------------------
-            if strcmp(parcellation, 'HCP') || strcmp(parcellation, 'HCPmni')
-                nSamples = size(data.left.Cortex.informationMRI,1)+size(data.right.Cortex.informationMRI,1);
-                Expression = cat(1,data.left.Cortex.expression, data.right.Cortex.expression);
-                CoordinatesMRI = cat(1,data.left.Cortex.informationMRI, data.right.Cortex.informationMRI);
-                CoordinatesMNI = cat(1,data.left.Cortex.informationMNI, data.right.Cortex.informationMNI);
-            else
+            if strcmp(parcellation, 'aparcaseg') || strcmp(parcellation, 'cust100') || strcmp(parcellation, 'cust250')
                 nSamples = size(data.left.Cortex.informationMRI,1)+size(data.left.Subcortex.informationMRI,1)+size(data.right.Cortex.informationMRI,1)+size(data.right.Subcortex.informationMRI,1);
                 Expression = cat(1,data.left.Cortex.expression,data.left.Subcortex.expression, data.right.Cortex.expression, data.right.Subcortex.expression);
                 CoordinatesMRI = cat(1,data.left.Cortex.informationMRI,data.left.Subcortex.informationMRI, data.right.Cortex.informationMRI, data.right.Subcortex.informationMRI);
                 CoordinatesMNI = cat(1,data.left.Cortex.informationMNI,data.left.Subcortex.informationMNI, data.right.Cortex.informationMNI, data.right.Subcortex.informationMNI);
+            else
+                nSamples = size(data.left.Cortex.informationMRI,1)+size(data.right.Cortex.informationMRI,1);
+                Expression = cat(1,data.left.Cortex.expression, data.right.Cortex.expression);
+                CoordinatesMRI = cat(1,data.left.Cortex.informationMRI, data.right.Cortex.informationMRI);
+                CoordinatesMNI = cat(1,data.left.Cortex.informationMNI, data.right.Cortex.informationMNI);
             end
             SUBJECT = zeros(nSamples,1);
             SUBJECT(:,1) = subject;
