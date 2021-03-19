@@ -4,7 +4,7 @@ This repository provides Matlab code for reproducing a range of analyses involvi
 
 If you use this code, please cite our accompanying paper:
 
-&#x1F4D7; A. Arnatkeviciute, B.D. Fulcher, A. Fornito. [A practical guide to linking brain-wide gene expression and neuroimaging data.](https://doi.org/10.1016/j.neuroimage.2019.01.011). _NeuroImage_. __189__: 353 (2019).
+&#x1F4D7; A. Arnatkeviciute, B.D. Fulcher, A. Fornito. [A practical guide to linking brain-wide gene expression and neuroimaging data.](https://doi.org/10.1016/j.neuroimage.2019.01.011) _NeuroImage_. __189__: 353 (2019).
 
 ### Change Log
 
