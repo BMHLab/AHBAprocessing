@@ -2,8 +2,8 @@
 
 This repository provides Matlab code for reproducing a range of analyses involving processing Allen Human Brain Atlas gene expression data and running a range of analyses to evaluate the effect of different processing choices. The code was verified using Matlab 2016b, 2017b, 2018a.
 
-Please read our [paper](https://doi.org/10.1016/j.neuroimage.2019.01.011), and if you use this code, please cite:
-A. Arnatkeviciute, B.D. Fulcher, A. Fornito. A practical guide to linking brain-wide gene expression and neuroimaging data.
+If you use this code, please cite our accompanying paper:
+&#x1F4D7; A. Arnatkeviciute, B.D. Fulcher, A. Fornito. [A practical guide to linking brain-wide gene expression and neuroimaging data.](https://doi.org/10.1016/j.neuroimage.2019.01.011). _NeuroImage_. __189__: 353 (2019).
 
 NOTE: The code and corresponding data has been updated on the 7th of April 2020. We have discovered some inaccuracies in the cust100 and cust250 parcellations. New random parcellations containing 100 and 250 regions per hemisphere were generated and the corresponding data updated. If you used cust100 and cust250 parcellations, please refer to the new version of the data.
 
