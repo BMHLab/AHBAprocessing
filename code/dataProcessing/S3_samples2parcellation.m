@@ -304,7 +304,7 @@ for parcellation = parcellations
 
             for side = sides
                 for brainPart = brainParts
-                    
+
                     % voxel-based coordinates are 0-indexed. MRI images loaded to MatLab are 1-indexed. +1 in the coordinates is adjunting both items to be 1-indexed. 
                     coords2assign = sampleInfoSubjects{subject}.(side{1}).(brainPart{1}).MRIvoxCoordinates+1;
                     coords2assignMNI = sampleInfoSubjects{subject}.(side{1}).(brainPart{1}).MMCoordinates;
