@@ -237,7 +237,7 @@ for parcellation = parcellations
             %------------------------------------------------------------------------------
             % Load parcellations
             %------------------------------------------------------------------------------
-             if strcmp(parcellation, 'aparcaseg')
+            if strcmp(parcellation, 'aparcaseg')
                 [~, data_parcel]=read('defaultparc_NativeAnat.nii');
                 NumNodes = 82;
                 LeftCortex = 1:34;
@@ -267,22 +267,32 @@ for parcellation = parcellations
                 [~, data_parcel]=read('Schaefer100_7net_config_uncorr.nii');
                 NumNodes = 100;
                 LeftCortex = 1:NumNodes/2;
-                RightCortex = 1:NumNodes/2+1:NumNodes;
+                RightCortex = NumNodes/2+1:NumNodes;
+            elseif strcmp(parcellation, 'Schaefer200')
+                [~, data_parcel]=read('Schaefer200_7net_config_uncorr.nii');
+                NumNodes = 200;
+                LeftCortex = 1:NumNodes/2;
+                RightCortex = NumNodes/2+1:NumNodes;
             elseif strcmp(parcellation, 'Schaefer300')
                 [~, data_parcel]=read('Schaefer300_7net_config_uncorr.nii');
                 NumNodes = 300;
                 LeftCortex = 1:NumNodes/2;
-                RightCortex = 1:NumNodes/2+1:NumNodes;
+                RightCortex = NumNodes/2+1:NumNodes;
             elseif strcmp(parcellation, 'Schaefer500')
                 [~, data_parcel]=read('Schaefer500_7net_config_uncorr.nii');
                 NumNodes = 500;
                 LeftCortex = 1:NumNodes/2;
-                RightCortex = 1:NumNodes/2+1:NumNodes;
+                RightCortex = NumNodes/2+1:NumNodes;
+            elseif strcmp(parcellation, 'Schaefer600')
+                [~, data_parcel]=read('Schaefer600_7net_config_uncorr.nii');
+                NumNodes = 600;
+                LeftCortex = 1:NumNodes/2;
+                RightCortex = NumNodes/2+1:NumNodes;
             elseif strcmp(parcellation, 'Schaefer1000')
                 [~, data_parcel]=read('Schaefer1000_7net_config_uncorr.nii');
                 NumNodes = 1000;
                 LeftCortex = 1:NumNodes/2;
-                RightCortex = 1:NumNodes/2+1:NumNodes;
+                RightCortex = NumNodes/2+1:NumNodes;
             elseif strcmp(parcellation, 'HCPmni')
                 [~, data_parcel]=read('MMPinMNI.nii');
                 NumNodes = 360;

@@ -25,12 +25,18 @@ elseif strcmp(parcellation, 'HCP')
 elseif strcmp(parcellation, 'Schaefer100')
     [vertices, label,ctab] = read_annotation('lh.Schaefer100_7net.annot');
     LeftCortex = 2:51;
+elseif strcmp(parcellation, 'Schaefer200')
+    [vertices, label,ctab] = read_annotation('lh.Schaefer200_7net.annot');
+    LeftCortex = 2:101;
 elseif strcmp(parcellation, 'Schaefer300')
     [vertices, label,ctab] = read_annotation('lh.Schaefer300_7net.annot');
     LeftCortex = 2:151;
 elseif strcmp(parcellation, 'Schaefer500')
     [vertices, label,ctab] = read_annotation('lh.Schaefer500_7net.annot');
     LeftCortex = 2:251;
+elseif strcmp(parcellation, 'Schaefer600')
+    [vertices, label,ctab] = read_annotation('lh.Schaefer600_7net.annot');
+    LeftCortex = 2:301;
 elseif strcmp(parcellation, 'Schaefer1000')
     [vertices, label,ctab] = read_annotation('lh.Schaefer1000_7net.annot');
     LeftCortex = 2:501;
